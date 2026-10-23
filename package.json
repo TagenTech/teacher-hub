@@ -1,0 +1,29 @@
+{
+  "name": "gestao-aulas",
+  "private": true,
+  "packageManager": "pnpm@9.15.1",
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:api": "pnpm --filter @aulinha/api start:dev",
+    "dev:web": "pnpm --filter @aulinha/web dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "api:create-teacher": "pnpm --filter @aulinha/api create-teacher",
+    "api:seed-demo": "pnpm --filter @aulinha/api seed-demo"
+  },
+  "devDependencies": {
+    "turbo": "^2.11.10",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "qs": "^6.16.0",
+      "js-yaml": "^5.4.1"
+    }
+  }
+}
