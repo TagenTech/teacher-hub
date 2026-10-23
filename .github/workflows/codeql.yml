@@ -15,6 +15,9 @@ permissions:
 
 jobs:
   analisar:
+    # Em repositório privado o code scanning exige o GitHub Code Security (Advanced Security).
+    # Ao ativá-lo, crie a variável de repositório CODEQL_ENABLED=true (Settings → Secrets and variables → Actions).
+    if: ${{ !github.event.repository.private || vars.CODEQL_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
