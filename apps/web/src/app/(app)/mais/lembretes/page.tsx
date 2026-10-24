@@ -1,6 +1,6 @@
 'use client';
 
-import { formatDuration, LESSON_REMINDER_OPTIONS } from '@aulinha/contracts';
+import { formatDuration, LESSON_REMINDER_OPTIONS } from '@turmei/contracts';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { BellRing, CalendarCheck, Copy, RefreshCw, Smartphone, Volume2 } from 'lucide-react';
 import * as React from 'react';
@@ -106,7 +106,7 @@ export default function LembretesPage() {
         <Section icon={Smartphone} title="Notificações neste aparelho">
           {pushState === 'needs-install' ? (
             <>
-              <p className="text-sm">No iPhone, as notificações só funcionam com a Aulinha instalada na Tela de Início (iOS 16.4+).</p>
+              <p className="text-sm">No iPhone, as notificações só funcionam com o Turmei instalado na Tela de Início (iOS 16.4+).</p>
               <InstallCard dismissible={false} />
             </>
           ) : pushState === 'unsupported' ? (
@@ -213,7 +213,7 @@ export default function LembretesPage() {
               if (v) chime();
             }}
             title="Tocar um som e vibrar"
-            description="Quando a aula estiver chegando e a Aulinha estiver aberta."
+            description="Quando a aula estiver chegando e o Turmei estiver aberto."
           />
         </Section>
 

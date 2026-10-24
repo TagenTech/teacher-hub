@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, LessonStatus } from '@aulinha/contracts';
+import { displayName, LessonStatus } from '@turmei/contracts';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { useAuth } from '@/lib/auth';
@@ -8,7 +8,7 @@ import { useLessons } from '@/lib/queries/agenda';
 import { useNow } from '@/lib/use-now';
 import { useToday } from '@/lib/use-today';
 
-export const INAPP_ALARM_KEY = 'aulinha_inapp_alarm';
+export const INAPP_ALARM_KEY = 'turmei_inapp_alarm';
 
 function inAppEnabled() {
   try {
@@ -56,7 +56,7 @@ export function AlarmWatcher() {
     for (const l of data) {
       if (l.status !== LessonStatus.AGENDADA) continue;
       const diff = (new Date(l.startsAt).getTime() - now) / 60_000;
-      const key = `aulinha_alarm_${l.id}`;
+      const key = `turmei_alarm_${l.id}`;
       if (diff > 0 && diff <= minutes && !fired.current.has(l.id)) {
         fired.current.add(l.id);
         try {

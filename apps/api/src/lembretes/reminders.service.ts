@@ -14,7 +14,7 @@ import {
   StudentStatus,
   zonedParts,
   type PushPayload,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { Student } from '../alunos/entities/student.entity';
 import { Lesson } from '../agenda/entities/lesson.entity';
 import { Events, type PackageLowEvent } from '../common/events';
@@ -102,7 +102,7 @@ export class RemindersService {
       dueToday ? `${dueToday} pagamento(s) vencendo` : null,
     ].filter(Boolean);
     await this.once(t.id, NotificationType.RESUMO_DIARIO, t.id, today, {
-      title: '☀️ Bom dia! Seu dia na Aulinha',
+      title: '☀️ Bom dia! Seu dia no Turmei',
       body: `Hoje: ${parts.join(' · ')}.`,
       url: '/hoje',
       tag: `resumo-${today}`,
@@ -178,7 +178,7 @@ export class RemindersService {
   async test(teacherId: string) {
     return this.push.send(teacherId, {
       title: '🔔 Lembretes ativados!',
-      body: 'É assim que a Aulinha vai te avisar das aulas e pagamentos.',
+      body: 'É assim que o Turmei vai te avisar das aulas e pagamentos.',
       url: '/mais/lembretes',
       tag: 'teste',
     });

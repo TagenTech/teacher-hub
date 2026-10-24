@@ -8,7 +8,7 @@ import {
   planHeadlineCents,
   type BillingPlanDto,
   type StudentDetailDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { CalendarClock, TrendingUp, Undo2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

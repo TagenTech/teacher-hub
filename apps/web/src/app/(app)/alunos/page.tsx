@@ -1,6 +1,6 @@
 'use client';
 
-import { searchable, StudentStatus, type StudentListItemDto } from '@aulinha/contracts';
+import { searchable, StudentStatus, type StudentListItemDto } from '@turmei/contracts';
 import { Search, UserPlus, X } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';

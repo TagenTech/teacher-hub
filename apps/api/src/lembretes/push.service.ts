@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as webpush from 'web-push';
-import type { PushPayload, PushStatusDto } from '@aulinha/contracts';
+import type { PushPayload, PushStatusDto } from '@turmei/contracts';
 import type { AppConfig } from '../config/configuration';
 import { SubscribeDto } from './dto/push.dto';
 import { isAllowedPushEndpoint } from './push-endpoint';

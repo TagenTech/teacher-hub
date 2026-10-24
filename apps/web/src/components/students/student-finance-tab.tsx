@@ -1,6 +1,6 @@
 'use client';
 
-import { BillingPlanType, formatBRL, monthLabel, monthOf, type StudentDetailDto } from '@aulinha/contracts';
+import { BillingPlanType, formatBRL, monthLabel, monthOf, type StudentDetailDto } from '@turmei/contracts';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { ChargeRow } from '@/components/finance/charge-row';

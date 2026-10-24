@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-const REFRESH_COOKIE = 'aulinha_refresh';
+const REFRESH_COOKIE = 'turmei_refresh';
 /** Telas de entrada: com sessão, vai direto para o app. */
 const ENTRY = ['/login', '/cadastro', '/esqueci-senha'];
 /** Área logada. */

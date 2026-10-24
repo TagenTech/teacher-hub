@@ -2,12 +2,12 @@
  * Gestão do dia a dia contra um Postgres real: financeiro (editar, cancelar, reabrir, apagar, estorno, recibo,
  * resumo, destaques, prévia), alunos (editar, excluir, reajuste, pausa) e agenda (horário fixo, aula avulsa,
  * pendentes, reposição manual).
- *   pnpm --filter @aulinha/api test:e2e
+ *   pnpm --filter @turmei/api test:e2e
  */
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { DataSource } from 'typeorm';
-import { addDays, monthOf, todayIn, weekdayOf, zonedParts } from '@aulinha/contracts';
+import { addDays, monthOf, todayIn, weekdayOf, zonedParts } from '@turmei/contracts';
 import { StudentsService } from '../src/alunos/students.service';
 import { RemindersService } from '../src/lembretes/reminders.service';
 import { SecurityEventsService } from '../src/security/security-events.service';
@@ -52,7 +52,7 @@ describe('Gestão (e2e)', () => {
   beforeAll(async () => {
     app = await createTestApp();
     http = request(app.getHttpServer());
-    ({ auth } = await registerTeacher(http, 'Prof Gestão', 'gestao@aulinha.test'));
+    ({ auth } = await registerTeacher(http, 'Prof Gestão', 'gestao@turmei.test'));
   });
 
   afterAll(async () => {
@@ -390,7 +390,7 @@ describe('Gestão (e2e)', () => {
       expect(names).not.toContain('Vini Ajuste');
 
       const cobrancas = await http.get(`/v1/reports/export.csv?type=cobrancas&${q}`).set(auth).expect(200);
-      expect(cobrancas.headers['content-disposition']).toContain('aulinha-cobrancas-');
+      expect(cobrancas.headers['content-disposition']).toContain('turmei-cobrancas-');
       expect(cobrancas.text).toContain('Vencimento;Aluno;Descrição');
       expect(cobrancas.text).toContain('Xavi Mensal');
       const atrasos = await http.get(`/v1/reports/export.csv?type=atrasos&${q}`).set(auth).expect(200);

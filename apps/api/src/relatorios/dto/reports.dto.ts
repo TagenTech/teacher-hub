@@ -12,7 +12,7 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
-import { BillingPlanType, PaymentMethod, type ReportFilters, type SaveFilterRequest } from '@aulinha/contracts';
+import { BillingPlanType, PaymentMethod, type ReportFilters, type SaveFilterRequest } from '@turmei/contracts';
 import { IsIsoDate } from '../../common/validators/br.validators';
 
 /** Aceita "a,b,c" ou ?x=a&x=b. */

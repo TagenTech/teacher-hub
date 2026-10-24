@@ -1,6 +1,6 @@
 'use client';
 
-import { PAYMENT_METHOD_LABEL, PaymentMethod, type ChargeDto } from '@aulinha/contracts';
+import { PAYMENT_METHOD_LABEL, PaymentMethod, type ChargeDto } from '@turmei/contracts';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ import { usePay } from '@/lib/queries/finance';
 import { haptic } from '@/lib/utils';
 
 const METHODS = [PaymentMethod.PIX, PaymentMethod.DINHEIRO, PaymentMethod.CARTAO, PaymentMethod.TRANSFERENCIA, PaymentMethod.OUTRO];
-const LAST_METHOD = 'aulinha_last_method';
+const LAST_METHOD = 'turmei_last_method';
 
 function lastMethod(): PaymentMethod {
   try {

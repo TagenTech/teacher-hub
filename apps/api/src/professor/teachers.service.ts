@@ -9,7 +9,7 @@ import {
   type CompleteProfileRequest,
   type TeacherDto,
   type UpdateSettingsRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { AuthIdentity } from '../auth/entities/auth-identity.entity';
 import { blindIndex, encryptField } from '../common/crypto/field-crypto';
 import { Teacher } from './entities/teacher.entity';

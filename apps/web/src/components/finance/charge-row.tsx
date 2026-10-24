@@ -1,6 +1,6 @@
 'use client';
 
-import { ChargeStatus, displayName, formatBRL, type ChargeDto } from '@aulinha/contracts';
+import { ChargeStatus, displayName, formatBRL, type ChargeDto } from '@turmei/contracts';
 import { StudentAvatar } from '@/components/students/student-avatar';
 import { cn } from '@/lib/utils';
 import { ChargeStatusBadge } from './charge-status';

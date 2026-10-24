@@ -1,6 +1,6 @@
 'use client';
 
-import { LessonMode } from '@aulinha/contracts';
+import { LessonMode } from '@turmei/contracts';
 import { Link2, MapPin } from 'lucide-react';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';

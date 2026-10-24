@@ -1,6 +1,6 @@
 'use client';
 
-import { initials } from '@aulinha/contracts';
+import { initials } from '@turmei/contracts';
 import {
   BarChart3,
   BellRing,
@@ -142,7 +142,7 @@ export default function MaisPage() {
           <LogOut /> Sair
         </Button>
 
-        <p className="pb-2 text-center text-xs text-muted-foreground">Aulinha · versão 1.0</p>
+        <p className="pb-2 text-center text-xs text-muted-foreground">Turmei · versão 1.0</p>
       </div>
       <ChangePasswordSheet open={passwordOpen} onOpenChange={setPasswordOpen} />
     </>

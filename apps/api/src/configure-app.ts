@@ -37,7 +37,7 @@ export function configureApp(app: NestExpressApplication) {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   if (swagger) {
-    const doc = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle('Aulinha API').setVersion('1.0').addBearerAuth().build());
+    const doc = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle('Turmei API').setVersion('1.0').addBearerAuth().build());
     SwaggerModule.setup(`${prefix}/api/docs`, app, doc);
   }
   return { prefix, port: config.get<number>('port') ?? 3200 };

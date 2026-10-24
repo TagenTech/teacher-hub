@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, formatDateShort } from '@aulinha/contracts';
+import { displayName, formatDateShort } from '@turmei/contracts';
 import { toast } from 'sonner';
 import { useLessonActions } from '@/components/agenda/lesson-actions';
 import { FormTopBar, useBack } from '@/components/layout/form-page';

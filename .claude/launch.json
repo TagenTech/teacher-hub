@@ -6,7 +6,7 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
         "--filter",
-        "@aulinha/api",
+        "@turmei/api",
         "start:dev"
       ],
       "port": 3200
@@ -16,7 +16,7 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
         "--filter",
-        "@aulinha/web",
+        "@turmei/web",
         "dev"
       ],
       "port": 3201
@@ -39,7 +39,7 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
         "--filter",
-        "@aulinha/web",
+        "@turmei/web",
         "exec",
         "next",
         "dev",
@@ -53,7 +53,7 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
         "--filter",
-        "@aulinha/api",
+        "@turmei/api",
         "exec",
         "ts-node",
         "-r",

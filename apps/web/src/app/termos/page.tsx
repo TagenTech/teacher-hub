@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Termos de uso' };
 export default function TermosPage() {
   return (
     <LegalPage title="Termos de uso" updated="23/10/2026">
-      <p>A Aulinha é uma ferramenta para professores organizarem alunos, agenda, presença, cobranças e lembretes.</p>
+      <p>O Turmei é uma ferramenta para professores organizarem alunos, agenda, presença, cobranças e lembretes.</p>
       <h2>Sua conta</h2>
       <ul>
         <li>Você é responsável pelos dados que cadastra e por manter sua senha em segurança.</li>

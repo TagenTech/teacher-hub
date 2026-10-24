@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import type { AuthProvider } from '@aulinha/contracts';
+import type { AuthProvider } from '@turmei/contracts';
 import { Teacher } from '../../professor/entities/teacher.entity';
 
 /** Conta social ligada ao professor (um professor pode ter Google + Microsoft + senha). */

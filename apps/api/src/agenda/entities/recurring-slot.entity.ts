@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import type { LessonMode } from '@aulinha/contracts';
+import type { LessonMode } from '@turmei/contracts';
 import { Student } from '../../alunos/entities/student.entity';
 
 /** Horário fixo semanal (ex.: toda terça 19:00, 60 min). Gera as aulas automaticamente. */

@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { MakeupCreditStatus } from '@aulinha/contracts';
+import { MakeupCreditStatus } from '@turmei/contracts';
 import { Student } from '../../alunos/entities/student.entity';
 
 /** Aula devida ao aluno (falta do professor, falta justificada, feriado…). */

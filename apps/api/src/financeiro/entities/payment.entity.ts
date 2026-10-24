@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import type { PaymentMethod } from '@aulinha/contracts';
+import type { PaymentMethod } from '@turmei/contracts';
 import { Charge } from './charge.entity';
 
 @Entity('payments')

@@ -1,4 +1,4 @@
-import { chargeStatus, ChargeKind, diffDays, type ChargeDto, type PaymentDto } from '@aulinha/contracts';
+import { chargeStatus, ChargeKind, diffDays, type ChargeDto, type PaymentDto } from '@turmei/contracts';
 import { toStudentRef } from '../common/utils/student-ref';
 import type { Charge } from './entities/charge.entity';
 import type { Payment } from './entities/payment.entity';

@@ -27,7 +27,7 @@ type Http = ReturnType<typeof request>;
  */
 export async function registerTeacher(http: Http, name: string, email: string, password = 'senha-forte-123') {
   const res = await http.post('/v1/auth/register').send({ name, email, password, acceptTerms: true }).expect(201);
-  const cookie = (res.headers['set-cookie'] as unknown as string[]).find((c) => c.startsWith('aulinha_refresh='))!.split(';')[0];
+  const cookie = (res.headers['set-cookie'] as unknown as string[]).find((c) => c.startsWith('turmei_refresh='))!.split(';')[0];
   return {
     id: res.body.teacher.id as string,
     token: res.body.accessToken as string,

@@ -1,11 +1,11 @@
-# Aulinha — guia rápido para agentes
+# Turmei — guia rápido para agentes
 
 Monorepo pnpm + Turbo. Leia o [README](README.md) e o [docs/PLANO.md](docs/PLANO.md).
 
 ## Convenções
 - Textos de interface e mensagens de erro em **português (pt-BR)**, tom acolhedor e curto.
 - **Dinheiro em centavos** (int). **Datas de calendário** como `'YYYY-MM-DD'`; instantes em UTC; "hoje" sempre `todayIn(teacher.timezone)` (`packages/contracts/src/time.ts`, `dates.ts`).
-- **Regras puras** (status de cobrança, regra de presença, planos, ranking) ficam em `packages/contracts` com testes — API e web usam as mesmas. Depois de mudar contracts: `pnpm --filter @aulinha/contracts build`.
+- **Regras puras** (status de cobrança, regra de presença, planos, ranking) ficam em `packages/contracts` com testes — API e web usam as mesmas. Depois de mudar contracts: `pnpm --filter @turmei/contracts build`.
 - **Status de cobrança é calculado** (`chargeStatus`), nunca gravado.
 - Toda consulta filtra por `teacherId` do JWT (cada professor é uma conta isolada). Rotas são protegidas por padrão; pública só com `@Public()`.
 - Autenticação: e-mail/senha + Google/Microsoft/Meta (OAuth no servidor, `src/auth/oauth.service.ts`). Ver `docs/AUTENTICACAO.md`.
@@ -33,6 +33,6 @@ Monorepo pnpm + Turbo. Leia o [README](README.md) e o [docs/PLANO.md](docs/PLANO
 - Rotas dinâmicas novas exigem reiniciar o `next dev`.
 
 ## Verificação
-`pnpm typecheck && pnpm lint && pnpm test && pnpm --filter @aulinha/api test:e2e && pnpm build && pnpm --filter @aulinha/web test:e2e`
+`pnpm typecheck && pnpm lint && pnpm test && pnpm --filter @turmei/api test:e2e && pnpm build && pnpm --filter @turmei/web test:e2e`
 
 Testes: regras em `packages/contracts/*.spec.ts`; API em `src/**/*.spec.ts` (unidade) e `test/*.e2e-spec.ts` (Postgres real, setup em `test/env.ts`/`helpers.ts`); web em `apps/web/e2e` (Playwright, seletores por rótulo/papel acessível). Funcionalidade nova → teste junto.

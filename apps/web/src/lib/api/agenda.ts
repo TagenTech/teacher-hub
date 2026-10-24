@@ -11,7 +11,7 @@ import type {
   SlotDto,
   UpdateLessonRequest,
   UpdateSlotRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { api } from './client';
 
 const json = (body: unknown) => ({ body: JSON.stringify(body) });

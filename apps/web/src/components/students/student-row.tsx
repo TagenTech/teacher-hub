@@ -1,4 +1,4 @@
-import { describePlan, displayName, type StudentListItemDto } from '@aulinha/contracts';
+import { describePlan, displayName, type StudentListItemDto } from '@turmei/contracts';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { StudentStatusBadge } from './status-badge';

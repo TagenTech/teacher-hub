@@ -10,7 +10,7 @@ import type {
   RescheduleRequest,
   UpdateLessonRequest,
   UpdateSlotRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { agendaApi } from '@/lib/api/agenda';
 

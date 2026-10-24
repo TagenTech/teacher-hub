@@ -1,6 +1,6 @@
 'use client';
 
-import { normalizeTag, STUDENT_COLORS, STUDENT_EMOJIS, STUDENT_LIMITS } from '@aulinha/contracts';
+import { normalizeTag, STUDENT_COLORS, STUDENT_EMOJIS, STUDENT_LIMITS } from '@turmei/contracts';
 import { AtSign, Cake, Phone, User, X } from 'lucide-react';
 import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';

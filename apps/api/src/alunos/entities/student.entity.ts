@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { StudentStatus, type StudentColor } from '@aulinha/contracts';
+import { StudentStatus, type StudentColor } from '@turmei/contracts';
 import { BillingPlan } from './billing-plan.entity';
 
 @Entity('students')

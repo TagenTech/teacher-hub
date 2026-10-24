@@ -17,6 +17,8 @@ function keys() {
     throw new Error('DATA_ENCRYPTION_KEY ausente ou inválida (32 bytes em base64: openssl rand -base64 32)');
   }
   // Chaves separadas para cifrar e para o índice (derivadas da mestra).
+  // Os rótulos "aulinha:*" são só um separador criptográfico (nome antigo do app): NÃO renomeie,
+  // senão as chaves derivadas mudam e tudo que já foi cifrado (CPF, 2FA) fica ilegível.
   const enc = Buffer.from(hkdfSync('sha256', master, Buffer.alloc(0), 'aulinha:field-encryption', 32));
   const idx = Buffer.from(hkdfSync('sha256', master, Buffer.alloc(0), 'aulinha:blind-index', 32));
   cachedKey = { raw, enc, idx };

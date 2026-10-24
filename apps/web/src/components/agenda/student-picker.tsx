@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, searchable, StudentStatus } from '@aulinha/contracts';
+import { displayName, searchable, StudentStatus } from '@turmei/contracts';
 import { Search } from 'lucide-react';
 import * as React from 'react';
 import { StudentAvatar } from '@/components/students/student-avatar';

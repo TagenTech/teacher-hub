@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PASSWORD_MIN_LENGTH } from '@aulinha/contracts';
+import { PASSWORD_MIN_LENGTH } from '@turmei/contracts';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';

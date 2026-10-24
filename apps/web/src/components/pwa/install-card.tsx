@@ -7,7 +7,7 @@ import { Sheet } from '@/components/ui/sheet';
 import { useInstallPrompt } from '@/lib/pwa';
 import { useHydrated } from '@/lib/use-hydrated';
 
-const DISMISS_KEY = 'aulinha_install_dismissed';
+const DISMISS_KEY = 'turmei_install_dismissed';
 
 function readDismissed() {
   try {
@@ -43,7 +43,7 @@ export function InstallCard({ dismissible = true }: { dismissible?: boolean }) {
           <Smartphone className="size-6" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="font-display font-extrabold text-pink-soft-foreground">Instale a Aulinha</p>
+          <p className="font-display font-extrabold text-pink-soft-foreground">Instale o Turmei</p>
           <p className="text-sm text-pink-soft-foreground/80">Abre como app e recebe os lembretes de aula.</p>
         </div>
         <Button
@@ -86,7 +86,7 @@ export function InstallCard({ dismissible = true }: { dismissible?: boolean }) {
           <li className="flex items-center gap-4">
             <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-pink-soft text-xl">💜</span>
             <p>
-              Toque em <strong>Adicionar</strong> e abra a Aulinha pelo ícone.
+              Toque em <strong>Adicionar</strong> e abra o Turmei pelo ícone.
             </p>
           </li>
         </ol>

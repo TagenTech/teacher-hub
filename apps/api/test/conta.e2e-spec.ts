@@ -2,7 +2,7 @@
  * Conta e preferências contra um Postgres real: esqueci a senha, reenviar confirmação, renovação de sessão
  * (com detecção de reuso), sair, encerrar um aparelho, desativar 2FA e gerar novos códigos, ajustes,
  * exportar dados, push (status/desativar/teste) e novo link do calendário.
- *   pnpm --filter @aulinha/api test:e2e
+ *   pnpm --filter @turmei/api test:e2e
  */
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
@@ -20,13 +20,13 @@ describe('Conta (e2e)', () => {
     );
   const tokenOf = (link: string) => new URL(link).searchParams.get('token')!;
   const cookieOf = (res: request.Response) =>
-    ((res.headers['set-cookie'] as unknown as string[]) ?? []).find((c) => c.startsWith('aulinha_refresh='))?.split(';')[0];
+    ((res.headers['set-cookie'] as unknown as string[]) ?? []).find((c) => c.startsWith('turmei_refresh='))?.split(';')[0];
   const login = (email: string, password: string) => http.post('/v1/auth/login').send({ email, password });
 
   beforeAll(async () => {
     app = await createTestApp();
     http = request(app.getHttpServer());
-    me = await registerTeacher(http, 'Prof Conta', 'conta@aulinha.test');
+    me = await registerTeacher(http, 'Prof Conta', 'conta@turmei.test');
   });
 
   afterAll(async () => {
@@ -43,9 +43,9 @@ describe('Conta (e2e)', () => {
   });
 
   it('esqueci a senha: não revela contas, o link troca a senha uma vez e derruba as sessões', async () => {
-    const victim = await registerTeacher(http, 'Esquecida', 'esquecida@aulinha.test', 'senha-antiga-123');
-    await http.post('/v1/auth/forgot-password').send({ email: 'ninguem@aulinha.test' }).expect(204);
-    expect(await outbox('ninguem@aulinha.test', 'Redefinir')).toHaveLength(0);
+    const victim = await registerTeacher(http, 'Esquecida', 'esquecida@turmei.test', 'senha-antiga-123');
+    await http.post('/v1/auth/forgot-password').send({ email: 'ninguem@turmei.test' }).expect(204);
+    expect(await outbox('ninguem@turmei.test', 'Redefinir')).toHaveLength(0);
 
     await http.post('/v1/auth/forgot-password').send({ email: victim.email }).expect(204);
     const [mail] = await outbox(victim.email, 'Redefinir');
@@ -62,7 +62,7 @@ describe('Conta (e2e)', () => {
   });
 
   it('renovar sessão troca o cookie; reusar o cookie antigo derruba tudo (roubo de token)', async () => {
-    const t = await registerTeacher(http, 'Renova', 'renova@aulinha.test');
+    const t = await registerTeacher(http, 'Renova', 'renova@turmei.test');
     const renewed = await http.post('/v1/auth/refresh').set('Cookie', t.cookie).expect(200);
     const newCookie = cookieOf(renewed)!;
     expect(newCookie).toBeDefined();
@@ -76,9 +76,9 @@ describe('Conta (e2e)', () => {
   });
 
   it('sair encerra a sessão e apaga o cookie', async () => {
-    const t = await registerTeacher(http, 'Sai', 'sai-sessao@aulinha.test');
+    const t = await registerTeacher(http, 'Sai', 'sai-sessao@turmei.test');
     const res = await http.post('/v1/auth/logout').set('Cookie', t.cookie).expect(204);
-    expect(cookieOf(res)).toBe('aulinha_refresh=');
+    expect(cookieOf(res)).toBe('turmei_refresh=');
     await http.post('/v1/auth/refresh').set('Cookie', t.cookie).expect(401);
     await http.get('/v1/students').set(t.auth).expect(401);
     // Sair sem sessão não quebra.
@@ -86,7 +86,7 @@ describe('Conta (e2e)', () => {
   });
 
   it('encerrar um aparelho específico derruba só ele', async () => {
-    const phone = await registerTeacher(http, 'Dois Aparelhos', 'dois@aulinha.test');
+    const phone = await registerTeacher(http, 'Dois Aparelhos', 'dois@turmei.test');
     const laptop = await login(phone.email, phone.password).expect(200);
     const laptopAuth = { authorization: `Bearer ${laptop.body.accessToken}` };
 
@@ -134,7 +134,7 @@ describe('Conta (e2e)', () => {
       .set(me.auth)
       .send({
         name: 'Prof Conta Silva',
-        pixKey: 'conta@aulinha.test',
+        pixKey: 'conta@turmei.test',
         pixKeyType: 'EMAIL',
         lessonReminderMinutes: 45,
         paymentReminderHour: 8,
@@ -143,7 +143,7 @@ describe('Conta (e2e)', () => {
       })
       .expect(200);
     expect(saved.body).toMatchObject({ name: 'Prof Conta Silva', pixKeyType: 'EMAIL', lessonReminderMinutes: 45, paymentReminderHour: 8, defaultLessonMinutes: 50 });
-    expect((await http.get('/v1/me').set(me.auth).expect(200)).body.pixKey).toBe('conta@aulinha.test');
+    expect((await http.get('/v1/me').set(me.auth).expect(200)).body.pixKey).toBe('conta@turmei.test');
 
     const st = await http
       .post('/v1/students')
@@ -156,7 +156,7 @@ describe('Conta (e2e)', () => {
       .send({ studentId: st.body.id, description: 'Livro', amountCents: 4590, dueDate: '2030-01-10' })
       .expect(201);
     const msg = await http.get(`/v1/charges/${ch.body.id}/whatsapp`).set(me.auth).expect(200);
-    expect(msg.body.text.replace(/\u00a0/g, ' ')).toBe('Olá Vera! livro: R$ 45,90.\nPIX (e-mail): conta@aulinha.test — Prof');
+    expect(msg.body.text.replace(/\u00a0/g, ' ')).toBe('Olá Vera! livro: R$ 45,90.\nPIX (e-mail): conta@turmei.test — Prof');
   });
 
   it('exportar meus dados traz tudo da conta, sem senha nem segredos', async () => {

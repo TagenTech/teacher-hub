@@ -32,7 +32,7 @@ describe('TOTP (RFC 6238)', () => {
   });
 
   it('otpauth e códigos de recuperação', () => {
-    expect(otpauthUrl('ABC', 'f@x.com')).toBe('otpauth://totp/Aulinha%3Af%40x.com?secret=ABC&issuer=Aulinha&algorithm=SHA1&digits=6&period=30');
+    expect(otpauthUrl('ABC', 'f@x.com')).toBe('otpauth://totp/Turmei%3Af%40x.com?secret=ABC&issuer=Turmei&algorithm=SHA1&digits=6&period=30');
     const codes = generateRecoveryCodes();
     expect(codes).toHaveLength(10);
     expect(new Set(codes).size).toBe(10);

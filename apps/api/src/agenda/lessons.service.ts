@@ -14,7 +14,7 @@ import {
   zonedToUtc,
   type LessonDto,
   type MakeupCreditDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { BillingPlan } from '../alunos/entities/billing-plan.entity';
 import { Student } from '../alunos/entities/student.entity';
 import { Events, type LessonMarkedEvent } from '../common/events';

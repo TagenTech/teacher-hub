@@ -5,7 +5,7 @@
 export function safeNext(next: string | null, fallback = '/hoje'): string {
   if (!next || !next.startsWith('/') || next.startsWith('//') || next.includes('\\')) return fallback;
   try {
-    const base = 'https://aulinha.invalid';
+    const base = 'https://turmei.invalid';
     const u = new URL(next, base);
     return u.origin === base ? `${u.pathname}${u.search}${u.hash}` : fallback;
   } catch {

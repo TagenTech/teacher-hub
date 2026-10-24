@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_TIMEZONE } from '@aulinha/contracts';
+import { DEFAULT_TIMEZONE } from '@turmei/contracts';
 import { useAuth } from './auth';
 
 export function useTz(): string {

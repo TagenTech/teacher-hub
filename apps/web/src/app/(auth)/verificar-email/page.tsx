@@ -32,14 +32,14 @@ function Verify() {
   return state === 'ok' ? (
     <AuthLayout title="E-mail confirmado! 🎉" subtitle="Tudo certo com a sua conta.">
       <Button asChild block size="lg">
-        <Link href="/hoje">Ir para a Aulinha</Link>
+        <Link href="/hoje">Ir para o Turmei</Link>
       </Button>
     </AuthLayout>
   ) : (
     <AuthLayout title="Não deu para confirmar" subtitle={message}>
       <div className="space-y-3">
         <Button asChild block size="lg">
-          <Link href="/hoje">Abrir a Aulinha</Link>
+          <Link href="/hoje">Abrir o Turmei</Link>
         </Button>
         <p className="text-center text-sm text-muted-foreground">Lá dentro você pode pedir um novo link.</p>
       </div>

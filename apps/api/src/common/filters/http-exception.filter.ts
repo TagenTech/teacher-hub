@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import type { Response } from 'express';
-import type { ApiError } from '@aulinha/contracts';
+import type { ApiError } from '@turmei/contracts';
 import { captureException } from '../../instrument';
 
 /** Normaliza erros no formato `ApiError` e nunca vaza stack trace para o cliente. */

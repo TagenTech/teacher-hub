@@ -18,7 +18,7 @@ import {
   type MonthSummaryDto,
   type ReceiptDto,
   type WhatsappMessageDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { Student } from '../alunos/entities/student.entity';
 import { Lesson } from '../agenda/entities/lesson.entity';
 import { Teacher } from '../professor/entities/teacher.entity';

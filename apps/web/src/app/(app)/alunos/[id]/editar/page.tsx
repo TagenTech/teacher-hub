@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, type StudentDetailDto } from '@aulinha/contracts';
+import { displayName, type StudentDetailDto } from '@turmei/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';

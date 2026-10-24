@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
-import { maskCpf } from "@aulinha/contracts";
+import { maskCpf } from "@turmei/contracts";
 import { blindIndex, decryptField, encryptField } from "../common/crypto/field-crypto";
 
 export class SecurityHardening1792770540566 implements MigrationInterface {

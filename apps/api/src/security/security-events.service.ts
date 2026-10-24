@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository } from 'typeorm';
-import { deviceLabel, SecurityEventType, type SecurityEventDto } from '@aulinha/contracts';
+import { deviceLabel, SecurityEventType, type SecurityEventDto } from '@turmei/contracts';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { SecurityEvent } from './entities/security-event.entity';
 import type { RequestContext } from './request-context';

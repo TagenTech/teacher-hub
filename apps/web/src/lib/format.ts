@@ -1,4 +1,4 @@
-import { formatDateLong, WEEKDAYS, zonedParts, type IsoDate } from '@aulinha/contracts';
+import { formatDateLong, WEEKDAYS, zonedParts, type IsoDate } from '@turmei/contracts';
 
 export const timeOf = (iso: string, tz: string) => zonedParts(new Date(iso), tz).time;
 export const dateOf = (iso: string, tz: string) => zonedParts(new Date(iso), tz).date;

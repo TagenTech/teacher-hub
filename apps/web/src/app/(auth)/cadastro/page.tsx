@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PASSWORD_MIN_LENGTH } from '@aulinha/contracts';
+import { PASSWORD_MIN_LENGTH } from '@turmei/contracts';
 import { Mail, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -23,7 +23,7 @@ const schema = z.object({
   name: z.string().trim().min(2, 'Como podemos te chamar?').max(120),
   email: z.string().trim().min(1, 'Informe seu e-mail').email('Esse e-mail não parece certo'),
   password: z.string().min(PASSWORD_MIN_LENGTH, `Use pelo menos ${PASSWORD_MIN_LENGTH} caracteres`).max(128),
-  acceptTerms: z.literal(true, { errorMap: () => ({ message: 'Aceite os termos para continuar' }) }),
+  acceptTerms: z.literal(true, { error: 'Aceite os termos para continuar' }),
 });
 type FormValues = z.infer<typeof schema>;
 

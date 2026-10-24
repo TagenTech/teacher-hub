@@ -4,7 +4,7 @@
 > O aluno **não** faz login: só o professor tem acesso.
 > Arquitetura baseada no monorepo de referência `smartreparo-mvp` (pnpm + Turbo, NestJS + TypeORM + Postgres, Next.js + Tailwind + Radix), simplificada para o tamanho deste produto.
 
-Nome provisório do app: **Aulinha** (pode trocar).
+Nome do app: **Turmei**.
 
 > **Status (23/10/2026):** fases 0 a 6 implementadas. Como rodar e o que cada tela faz: [README](../README.md).
 

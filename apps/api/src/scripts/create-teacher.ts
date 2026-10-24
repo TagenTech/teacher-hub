@@ -7,7 +7,7 @@
  */
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
-import { PASSWORD_MIN_LENGTH } from '@aulinha/contracts';
+import { PASSWORD_MIN_LENGTH } from '@turmei/contracts';
 import { AppModule } from '../app.module';
 import { TeachersService } from '../professor/teachers.service';
 

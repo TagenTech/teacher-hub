@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-import type { SavedFilterDto, SavedFilterScope } from '@aulinha/contracts';
+import type { SavedFilterDto, SavedFilterScope } from '@turmei/contracts';
 
 @Entity('saved_filters')
 @Index(['teacherId', 'scope'])

@@ -15,7 +15,7 @@ import {
   type StudentDetailDto,
   type StudentDto,
   type StudentListItemDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { Events, type PlanChangedEvent, type StudentStatusChangedEvent } from '../common/events';
 import { TeachersService } from '../professor/teachers.service';
 import { CreateBillingPlanDto } from './dto/billing-plan.dto';

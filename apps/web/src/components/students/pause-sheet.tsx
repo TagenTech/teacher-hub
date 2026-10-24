@@ -1,6 +1,6 @@
 'use client';
 
-import { addDays, displayName, formatDateLong, StudentStatus, type StudentDetailDto } from '@aulinha/contracts';
+import { addDays, displayName, formatDateLong, StudentStatus, type StudentDetailDto } from '@turmei/contracts';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

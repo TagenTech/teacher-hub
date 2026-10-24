@@ -1,6 +1,6 @@
 'use client';
 
-import { safeNext } from '@aulinha/contracts';
+import { safeNext } from '@turmei/contracts';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
@@ -45,7 +45,7 @@ function SecondStep() {
   }
 
   return (
-    <AuthLayout title="Verificação em duas etapas 🔐" subtitle="Abra seu app autenticador e digite o código da Aulinha.">
+    <AuthLayout title="Verificação em duas etapas 🔐" subtitle="Abra seu app autenticador e digite o código do Turmei.">
       <MfaCodeForm
         loading={loading}
         error={error}

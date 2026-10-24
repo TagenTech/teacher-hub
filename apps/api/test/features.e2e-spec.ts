@@ -1,11 +1,11 @@
 /**
  * Funcionalidades do dia a dia contra um Postgres real: lembretes (D-1, atraso, aniversário, pacote),
  * bloqueios de agenda, reposições, remarcação, ranking de atrasos, frequência e filtros salvos.
- *   pnpm --filter @aulinha/api test:e2e
+ *   pnpm --filter @turmei/api test:e2e
  */
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { addDays, todayIn, weekdayOf, type PushPayload } from '@aulinha/contracts';
+import { addDays, todayIn, weekdayOf, type PushPayload } from '@turmei/contracts';
 import { DataSource } from 'typeorm';
 import { SlotsService } from '../src/agenda/slots.service';
 import { BillingService } from '../src/financeiro/billing.service';
@@ -60,10 +60,10 @@ describe('Funcionalidades (e2e)', () => {
 
   beforeAll(async () => {
     app = await createTestApp();
-    const { teacher } = await app.get(TeachersService).upsert('Prof Recursos', 'recursos@aulinha.test', 'senha-recursos-123');
+    const { teacher } = await app.get(TeachersService).upsert('Prof Recursos', 'recursos@turmei.test', 'senha-recursos-123');
     teacherId = teacher.id;
     http = request(app.getHttpServer());
-    token = (await http.post('/v1/auth/login').send({ email: 'recursos@aulinha.test', password: 'senha-recursos-123' }).expect(200)).body
+    token = (await http.post('/v1/auth/login').send({ email: 'recursos@turmei.test', password: 'senha-recursos-123' }).expect(200)).body
       .accessToken;
     jest.spyOn(app.get(PushService), 'send').mockImplementation(async (id: string, payload: PushPayload) => {
       pushed.push({ teacherId: id, payload });
@@ -353,8 +353,8 @@ describe('Funcionalidades (e2e)', () => {
       list = (await http.get('/v1/saved-filters').set(auth()).expect(200)).body;
       expect(list.map((f) => f.name)).toEqual(['Quem deve', 'Este mês']);
 
-      await app.get(TeachersService).upsert('Intrusa', 'intrusa@aulinha.test', 'senha-intrusa-123');
-      const other = (await http.post('/v1/auth/login').send({ email: 'intrusa@aulinha.test', password: 'senha-intrusa-123' }).expect(200)).body
+      await app.get(TeachersService).upsert('Intrusa', 'intrusa@turmei.test', 'senha-intrusa-123');
+      const other = (await http.post('/v1/auth/login').send({ email: 'intrusa@turmei.test', password: 'senha-intrusa-123' }).expect(200)).body
         .accessToken;
       await http.patch(`/v1/saved-filters/${a.body.id}`).set({ authorization: `Bearer ${other}` }).send({ name: 'x' }).expect(404);
       await http.delete(`/v1/saved-filters/${a.body.id}`).set({ authorization: `Bearer ${other}` });

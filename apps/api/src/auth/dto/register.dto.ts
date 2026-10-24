@@ -7,7 +7,7 @@ import {
   type RegisterRequest,
   type ResetPasswordRequest,
   type VerifyEmailRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 
 const trim = () => Transform(({ value }) => (typeof value === 'string' ? value.trim() : value));
 const passwordRules = () => (target: object, key: string) => {

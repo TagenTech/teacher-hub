@@ -1,6 +1,6 @@
 'use client';
 
-import { SECURITY_EVENT_LABEL, type SecurityEventType } from '@aulinha/contracts';
+import { SECURITY_EVENT_LABEL, type SecurityEventType } from '@turmei/contracts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { History, Laptop, Smartphone } from 'lucide-react';
 import { toast } from 'sonner';

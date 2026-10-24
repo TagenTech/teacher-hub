@@ -1,4 +1,4 @@
-import { initials, type StudentColor } from '@aulinha/contracts';
+import { initials, type StudentColor } from '@turmei/contracts';
 import { cn } from '@/lib/utils';
 
 const sizes = {

@@ -1,4 +1,4 @@
-# Aulinha — Gestão de Aulas
+# Turmei — Gestão de Aulas
 
 Web app (PWA, mobile-first) para professores gerenciarem alunos, agenda, presença, mensalidades,
 lembretes e relatórios. Cada professor cria sua conta (e-mail ou Google/Microsoft/Meta); o aluno não faz login.
@@ -42,7 +42,7 @@ pnpm install
 cp apps/api/.env.example apps/api/.env        # JWT_SECRET, DEV_TEACHER_*, VAPID_* (npx web-push generate-vapid-keys)
 cp apps/web/.env.example apps/web/.env.local
 createdb gestao_aulas
-pnpm --filter @aulinha/contracts build
+pnpm --filter @turmei/contracts build
 pnpm api:create-teacher                        # professor de dev (DEV_TEACHER_* do .env)
 pnpm api:seed-demo                             # opcional: 8 alunos com 4 meses de histórico
 pnpm dev
@@ -59,10 +59,10 @@ Sem `RESEND_API_KEY`, os links de confirmação e de senha aparecem no log da AP
 | `pnpm dev` | Tudo em modo watch |
 | `pnpm build` / `pnpm typecheck` / `pnpm lint` | Build e qualidade |
 | `pnpm test` | Testes de unidade (contracts + API) |
-| `pnpm --filter @aulinha/api test:e2e` | API inteira contra Postgres real (banco `gestao_aulas_test`): `app` (fluxo e segurança), `features` (lembretes, agenda, relatórios), `gestao` (financeiro, alunos, agenda) e `conta` (sessões, senha, 2FA, ajustes, push) |
-| `pnpm --filter @aulinha/web test:e2e` | Fluxos principais no navegador (Playwright, celular): cadastro, aluno, aula, pagamento, relatórios, lembretes, login. Sobe API/web próprios nas portas 3210/3211 com o banco `gestao_aulas_e2e_web` zerado. `E2E_SKIP_BUILD=1` reaproveita o último build. Primeira vez: `pnpm --filter @aulinha/web exec playwright install chromium` |
+| `pnpm --filter @turmei/api test:e2e` | API inteira contra Postgres real (banco `gestao_aulas_test`): `app` (fluxo e segurança), `features` (lembretes, agenda, relatórios), `gestao` (financeiro, alunos, agenda) e `conta` (sessões, senha, 2FA, ajustes, push) |
+| `pnpm --filter @turmei/web test:e2e` | Fluxos principais no navegador (Playwright, celular): cadastro, aluno, aula, pagamento, relatórios, lembretes, login. Sobe API/web próprios nas portas 3210/3211 com o banco `gestao_aulas_e2e_web` zerado. `E2E_SKIP_BUILD=1` reaproveita o último build. Primeira vez: `pnpm --filter @turmei/web exec playwright install chromium` |
 | `pnpm api:seed-demo` | Recria os dados de demonstração do professor de dev |
-| `pnpm --filter @aulinha/api migration:generate src/migrations/Nome` | Nova migration a partir das entidades |
+| `pnpm --filter @turmei/api migration:generate src/migrations/Nome` | Nova migration a partir das entidades |
 
 Em dev o schema sincroniza sozinho (`TYPEORM_SYNC=true`); em produção só por migrations, aplicadas na subida da API.
 

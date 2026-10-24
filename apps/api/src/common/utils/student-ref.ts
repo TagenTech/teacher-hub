@@ -1,4 +1,4 @@
-import type { StudentRefDto } from '@aulinha/contracts';
+import type { StudentRefDto } from '@turmei/contracts';
 import type { Student } from '../../alunos/entities/student.entity';
 
 export function toStudentRef(s: Student): StudentRefDto {

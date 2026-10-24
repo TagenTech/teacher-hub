@@ -1,7 +1,7 @@
 /**
  * DataSource para a CLI do TypeORM (migrations).
- *   pnpm --filter @aulinha/api migration:generate src/migrations/NomeDaMudanca
- *   pnpm --filter @aulinha/api migration:run
+ *   pnpm --filter @turmei/api migration:generate src/migrations/NomeDaMudanca
+ *   pnpm --filter @turmei/api migration:run
  */
 import 'dotenv/config';
 import 'reflect-metadata';

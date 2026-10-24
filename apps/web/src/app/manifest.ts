@@ -3,8 +3,8 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: '/',
-    name: 'Aulinha — Gestão de Aulas',
-    short_name: 'Aulinha',
+    name: 'Turmei — Gestão de Aulas',
+    short_name: 'Turmei',
     description: 'Suas aulas, alunos e mensalidades num só lugar.',
     lang: 'pt-BR',
     start_url: '/hoje',

@@ -21,7 +21,7 @@ function layout(title: string, body: string, cta?: { label: string; url: string 
   return `
   <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#fbf8ff;padding:24px">
     <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:24px;padding:32px;border:1px solid #ece6f7">
-      <div style="font-size:28px;font-weight:900;color:#2d2640">Aulinha <span style="color:#e8689f">💜</span></div>
+      <div style="font-size:28px;font-weight:900;color:#2d2640">Turmei <span style="color:#e8689f">💜</span></div>
       <h2 style="color:#2d2640;margin:24px 0 8px">${title}</h2>
       <div style="color:#4a4360;font-size:15px;line-height:1.6">${body}</div>
       ${
@@ -67,7 +67,7 @@ export class MailService {
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: process.env.MAIL_FROM ?? 'Aulinha <onboarding@resend.dev>', to: mail.to, subject: mail.subject, html: mail.html }),
+        body: JSON.stringify({ from: process.env.MAIL_FROM ?? 'Turmei <onboarding@resend.dev>', to: mail.to, subject: mail.subject, html: mail.html }),
         signal: AbortSignal.timeout(10_000),
       });
       if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
@@ -82,7 +82,7 @@ export class MailService {
     return this.send({
       to,
       link: url,
-      subject: 'Confirme seu e-mail na Aulinha',
+      subject: 'Confirme seu e-mail no Turmei',
       html: layout(
         `Oi, ${escapeHtml(name.split(' ')[0])}! 👋`,
         'Falta só confirmar que este e-mail é seu. É rapidinho:',
@@ -95,7 +95,7 @@ export class MailService {
     return this.send({
       to,
       link: url,
-      subject: 'Redefinir sua senha da Aulinha',
+      subject: 'Redefinir sua senha do Turmei',
       html: layout(
         'Vamos criar uma senha nova',
         'Recebemos um pedido para redefinir a senha da sua conta. O link vale por 1 hora. Se não foi você, é só ignorar — nada muda.',
@@ -108,7 +108,7 @@ export class MailService {
     return this.send({
       to,
       link: loginUrl,
-      subject: 'Você já tem conta na Aulinha',
+      subject: 'Você já tem conta no Turmei',
       html: layout('Você já tem uma conta 🙂', 'Alguém (talvez você) tentou se cadastrar com este e-mail. É só entrar — ou recuperar a senha se esqueceu.', {
         label: 'Entrar',
         url: loginUrl,

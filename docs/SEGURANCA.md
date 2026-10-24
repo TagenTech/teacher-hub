@@ -149,5 +149,5 @@ todos os segredos (JWT, VAPID, OAuth, Resend, senha do banco), não basta apagar
 ```bash
 pnpm audit                                   # dependências
 pnpm test                                    # inclui anti-SSRF, open redirect, bloqueio de login
-pnpm --filter @aulinha/api test:e2e          # isolamento, CSV, cabeçalhos, 2FA, revogação, CPF cifrado
+pnpm --filter @turmei/api test:e2e          # isolamento, CSV, cabeçalhos, 2FA, revogação, CPF cifrado
 ```

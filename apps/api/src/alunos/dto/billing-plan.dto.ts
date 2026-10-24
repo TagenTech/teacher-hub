@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsIn, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
-import { BillingPlanType, type BillingPlanInput, type CreateBillingPlanRequest } from '@aulinha/contracts';
+import { BillingPlanType, type BillingPlanInput, type CreateBillingPlanRequest } from '@turmei/contracts';
 import { EmptyToNull, IsIsoDate } from '../../common/validators/br.validators';
 
 /** Formato bruto; as regras por tipo ficam em `normalizePlanInput` (contracts). */

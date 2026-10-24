@@ -1,6 +1,6 @@
 'use client';
 
-import { formatPhone } from '@aulinha/contracts';
+import { formatPhone } from '@turmei/contracts';
 import * as React from 'react';
 import { Input, type InputProps } from './input';
 

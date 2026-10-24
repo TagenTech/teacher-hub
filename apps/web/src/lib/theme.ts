@@ -1,6 +1,6 @@
 export type Theme = 'light' | 'dark' | 'system';
 
-const KEY = 'aulinha_theme';
+const KEY = 'turmei_theme';
 
 export function getStoredTheme(): Theme {
   try {

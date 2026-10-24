@@ -56,7 +56,7 @@ export default (): AppConfig => {
     vapid: {
       publicKey: process.env.VAPID_PUBLIC_KEY || null,
       privateKey: process.env.VAPID_PRIVATE_KEY || null,
-      subject: process.env.VAPID_SUBJECT || 'mailto:contato@aulinha.app',
+      subject: process.env.VAPID_SUBJECT || 'mailto:contato@turmei.app',
     },
     signupEnabled: process.env.SIGNUP_ENABLED !== 'false',
     oauth: {

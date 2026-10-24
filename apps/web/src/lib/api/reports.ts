@@ -5,7 +5,7 @@ import type {
   ReportSummaryDto,
   SavedFilterDto,
   SaveFilterRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { api, downloadFile } from './client';
 
 export function reportQuery(f: ReportFilters): string {
@@ -23,7 +23,7 @@ export const reportsApi = {
   latePayers: (f: ReportFilters) => api<LatePayerDto[]>(`/reports/late-payers?${reportQuery(f)}`),
   attendance: (f: ReportFilters) => api<AttendanceRowDto[]>(`/reports/attendance?${reportQuery(f)}`),
   exportCsv: (type: string, f: ReportFilters) =>
-    downloadFile(`/reports/export.csv?type=${type}&${reportQuery(f)}`, `aulinha-${type}.csv`),
+    downloadFile(`/reports/export.csv?type=${type}&${reportQuery(f)}`, `turmei-${type}.csv`),
   filters: () => api<SavedFilterDto[]>('/saved-filters'),
   saveFilter: (body: SaveFilterRequest) => api<SavedFilterDto>('/saved-filters', { method: 'POST', body: JSON.stringify(body) }),
   removeFilter: (id: string) => api<void>(`/saved-filters/${id}`, { method: 'DELETE' }),

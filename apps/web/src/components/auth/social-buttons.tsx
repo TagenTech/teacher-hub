@@ -1,6 +1,6 @@
 'use client';
 
-import { AUTH_PROVIDER_LABEL, AuthProvider } from '@aulinha/contracts';
+import { AUTH_PROVIDER_LABEL, AuthProvider } from '@turmei/contracts';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { toast } from 'sonner';

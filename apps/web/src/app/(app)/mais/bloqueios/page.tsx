@@ -1,6 +1,6 @@
 'use client';
 
-import { formatDateShort } from '@aulinha/contracts';
+import { formatDateShort } from '@turmei/contracts';
 import { CalendarOff, Plus, Trash2 } from 'lucide-react';
 import * as React from 'react';
 import { toast } from 'sonner';

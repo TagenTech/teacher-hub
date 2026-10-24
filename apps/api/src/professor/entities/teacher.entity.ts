@@ -4,7 +4,7 @@ import {
   DEFAULT_PAYMENT_REMINDER_HOUR,
   DEFAULT_TIMEZONE,
   PixKeyType,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 
 @Entity('teachers')
 export class Teacher {

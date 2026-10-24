@@ -19,7 +19,7 @@ import {
   todayIn,
   zonedParts,
   zonedToUtc,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { BillingPlan } from '../alunos/entities/billing-plan.entity';
 import { Student } from '../alunos/entities/student.entity';
 import { Lesson } from '../agenda/entities/lesson.entity';

@@ -68,7 +68,7 @@ Em desenvolvimento: `http://localhost:3201/api/v1/auth/oauth/<provedor>/callback
 ## E-mail (Resend)
 
 1. Crie conta em [resend.com](https://resend.com), verifique o domínio (registros DNS SPF/DKIM).
-2. `RESEND_API_KEY` e `MAIL_FROM="Aulinha <nao-responda@seudominio.com.br>"`.
+2. `RESEND_API_KEY` e `MAIL_FROM="Turmei <nao-responda@seudominio.com.br>"`.
 3. Sem chave, em desenvolvimento nada sai: os links aparecem no log da API e em `GET /v1/dev/outbox`
    (rota que **não existe em produção**).
 

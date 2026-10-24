@@ -5,7 +5,7 @@ import type {
   StudentDetailDto,
   StudentListItemDto,
   UpdateStudentRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { api } from './client';
 
 export const studentsApi = {

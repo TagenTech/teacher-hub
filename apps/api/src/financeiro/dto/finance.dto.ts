@@ -8,7 +8,7 @@ import {
   type CreateChargeRequest,
   type RegisterPaymentRequest,
   type UpdateChargeRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { EmptyToNull, IsIsoDate } from '../../common/validators/br.validators';
 
 const trim = () => Transform(({ value }) => (typeof value === 'string' ? value.trim() : value));

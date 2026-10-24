@@ -1,6 +1,6 @@
 'use client';
 
-import { isMfaChallenge, type LoginRequest, type RegisterRequest, type TeacherDto } from '@aulinha/contracts';
+import { isMfaChallenge, type LoginRequest, type RegisterRequest, type TeacherDto } from '@turmei/contracts';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import * as authApi from './api/auth';

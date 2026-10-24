@@ -1,17 +1,17 @@
 /**
  * Fluxo ponta a ponta contra um Postgres real (banco gestao_aulas_test):
  * login → aluno → horário fixo → presença → reposição → cobrança → pagamento → relatórios.
- *   pnpm --filter @aulinha/api test:e2e
+ *   pnpm --filter @turmei/api test:e2e
  */
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { DataSource } from 'typeorm';
-import { addDays, monthOf, todayIn, weekdayOf } from '@aulinha/contracts';
+import { addDays, monthOf, todayIn, weekdayOf } from '@turmei/contracts';
 import { currentStep, hotp } from '../src/auth/totp';
 import { TeachersService } from '../src/professor/teachers.service';
 import { createTestApp } from './helpers';
 
-describe('Aulinha (e2e)', () => {
+describe('Turmei (e2e)', () => {
   let app: INestApplication;
   let http: ReturnType<typeof request>;
   let token = '';
@@ -21,7 +21,7 @@ describe('Aulinha (e2e)', () => {
 
   beforeAll(async () => {
     app = await createTestApp();
-    await app.get(TeachersService).upsert('Prof Teste', 'e2e@aulinha.test', 'senha-e2e-123');
+    await app.get(TeachersService).upsert('Prof Teste', 'e2e@turmei.test', 'senha-e2e-123');
     http = request(app.getHttpServer());
   });
 
@@ -34,9 +34,9 @@ describe('Aulinha (e2e)', () => {
   });
 
   it('faz login e devolve cookie httpOnly', async () => {
-    const res = await http.post('/v1/auth/login').send({ email: 'e2e@aulinha.test', password: 'senha-e2e-123' }).expect(200);
+    const res = await http.post('/v1/auth/login').send({ email: 'e2e@turmei.test', password: 'senha-e2e-123' }).expect(200);
     token = res.body.accessToken;
-    expect(res.headers['set-cookie'][0]).toMatch(/aulinha_refresh=.*HttpOnly/);
+    expect(res.headers['set-cookie'][0]).toMatch(/turmei_refresh=.*HttpOnly/);
   });
 
   let studentId = '';
@@ -113,13 +113,13 @@ describe('Aulinha (e2e)', () => {
     const providers = await http.get('/v1/auth/providers').expect(200);
     expect(providers.body).toEqual({ providers: [], signupEnabled: true });
 
-    await http.post('/v1/auth/register').send({ name: 'Nova', email: 'nova@aulinha.test', password: '123', acceptTerms: false }).expect(400);
+    await http.post('/v1/auth/register').send({ name: 'Nova', email: 'nova@turmei.test', password: '123', acceptTerms: false }).expect(400);
     const reg = await http
       .post('/v1/auth/register')
-      .send({ name: 'Nova Pessoa', email: 'nova@aulinha.test', password: 'senha-nova-123', acceptTerms: true })
+      .send({ name: 'Nova Pessoa', email: 'nova@turmei.test', password: 'senha-nova-123', acceptTerms: true })
       .expect(201);
     expect(reg.body.teacher).toMatchObject({ emailVerified: false, profileComplete: false, hasPassword: true });
-    await http.post('/v1/auth/register').send({ name: 'X', email: 'NOVA@aulinha.test', password: 'senha-nova-123', acceptTerms: true }).expect(400);
+    await http.post('/v1/auth/register').send({ name: 'X', email: 'NOVA@turmei.test', password: 'senha-nova-123', acceptTerms: true }).expect(400);
 
     const outbox = await http.get('/v1/dev/outbox').expect(200);
     const link: string = outbox.body.find((m: { subject: string }) => m.subject.startsWith('Confirme')).link;
@@ -135,13 +135,13 @@ describe('Aulinha (e2e)', () => {
     expect(prof.body).toMatchObject({ emailVerified: true, profileComplete: true, cpfMasked: '***.982.247-**' });
     expect(JSON.stringify(prof.body)).not.toContain('52998224725');
     // No banco: só cifra + índice cego, nunca o número.
-    const [row] = await app.get(DataSource).query(`SELECT * FROM teachers WHERE email = 'nova@aulinha.test'`);
+    const [row] = await app.get(DataSource).query(`SELECT * FROM teachers WHERE email = 'nova@turmei.test'`);
     expect(JSON.stringify(row)).not.toContain('52998224725');
     expect(row.cpf_encrypted).toMatch(/^v1:/);
   });
 
   it('2FA: ativa, exige código no login, aceita recuperação uma vez e derruba sessões antigas', async () => {
-    const login = () => http.post('/v1/auth/login').send({ email: 'e2e@aulinha.test', password: 'senha-e2e-123' });
+    const login = () => http.post('/v1/auth/login').send({ email: 'e2e@turmei.test', password: 'senha-e2e-123' });
     const first = await login().expect(200);
     const tokenA = first.body.accessToken as string;
     const authA = { authorization: `Bearer ${tokenA}` };
@@ -192,7 +192,7 @@ describe('Aulinha (e2e)', () => {
     await http.patch('/v1/auth/password').set(before).send({ currentPassword: 'senha-e2e-123', newPassword: 'senha-e2e-456' }).expect(204);
     await http.get('/v1/students').set(before).expect(401);
     // Entra de novo com a senha nova + 2FA (código de recuperação ainda não usado).
-    const challenge = await http.post('/v1/auth/login').send({ email: 'e2e@aulinha.test', password: 'senha-e2e-456' }).expect(200);
+    const challenge = await http.post('/v1/auth/login').send({ email: 'e2e@turmei.test', password: 'senha-e2e-456' }).expect(200);
     const ok = await http.post('/v1/auth/mfa/verify').send({ mfaToken: challenge.body.mfaToken, code: recoveryCodes[1] }).expect(200);
     token = ok.body.accessToken;
   });
@@ -232,24 +232,24 @@ describe('Aulinha (e2e)', () => {
   it('excluir a conta apaga todos os dados e invalida o token', async () => {
     const reg = await http
       .post('/v1/auth/register')
-      .send({ name: 'Sai Daqui', email: 'sai@aulinha.test', password: 'senha-sai-123', acceptTerms: true })
+      .send({ name: 'Sai Daqui', email: 'sai@turmei.test', password: 'senha-sai-123', acceptTerms: true })
       .expect(201);
     const a = { authorization: `Bearer ${reg.body.accessToken}` };
     await http.post('/v1/students').set(a).send({ name: 'Aluno X', plan: { type: 'MENSAL', monthlyFeeCents: 1000, dueDay: 5 } }).expect(201);
     await http.post('/v1/auth/delete-account').set(a).send({ confirmEmail: 'outro@x.com', password: 'senha-sai-123' }).expect(400);
-    await http.post('/v1/auth/delete-account').set(a).send({ confirmEmail: 'sai@aulinha.test', password: 'errada' }).expect(401);
-    await http.post('/v1/auth/delete-account').set(a).send({ confirmEmail: 'sai@aulinha.test', password: 'senha-sai-123' }).expect(204);
+    await http.post('/v1/auth/delete-account').set(a).send({ confirmEmail: 'sai@turmei.test', password: 'errada' }).expect(401);
+    await http.post('/v1/auth/delete-account').set(a).send({ confirmEmail: 'sai@turmei.test', password: 'senha-sai-123' }).expect(204);
     await http.get('/v1/students').set(a).expect(401);
     const db = app.get(DataSource);
-    const [{ n }] = await db.query(`SELECT count(*)::int AS n FROM teachers WHERE email = 'sai@aulinha.test'`);
+    const [{ n }] = await db.query(`SELECT count(*)::int AS n FROM teachers WHERE email = 'sai@turmei.test'`);
     expect(n).toBe(0);
     const [{ orphans }] = await db.query(`SELECT count(*)::int AS orphans FROM students s WHERE NOT EXISTS (SELECT 1 FROM teachers t WHERE t.id = s.teacher_id)`);
     expect(orphans).toBe(0);
   });
 
   it('isola dados por professor', async () => {
-    await app.get(TeachersService).upsert('Outro', 'outro@aulinha.test', 'senha-outro-123');
-    const res = await http.post('/v1/auth/login').send({ email: 'outro@aulinha.test', password: 'senha-outro-123' }).expect(200);
+    await app.get(TeachersService).upsert('Outro', 'outro@turmei.test', 'senha-outro-123');
+    const res = await http.post('/v1/auth/login').send({ email: 'outro@turmei.test', password: 'senha-outro-123' }).expect(200);
     const other = { authorization: `Bearer ${res.body.accessToken}` };
     await http.get(`/v1/students/${studentId}`).set(other).expect(404);
     await http.get(`/v1/charges/${chargeId}`).set(other).expect(404);

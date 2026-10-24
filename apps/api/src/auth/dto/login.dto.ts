@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
-import type { LoginRequest } from '@aulinha/contracts';
+import type { LoginRequest } from '@turmei/contracts';
 
 export class LoginDto implements LoginRequest {
-  @ApiProperty({ example: 'professor@aulinha.app' })
+  @ApiProperty({ example: 'professor@turmei.app' })
   @IsEmail({}, { message: 'E-mail inválido' })
   @MaxLength(180)
   email: string;

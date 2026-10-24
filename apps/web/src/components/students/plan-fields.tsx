@@ -1,6 +1,6 @@
 'use client';
 
-import { BillingPlanType, DUE_DAY_MAX, formatBRL } from '@aulinha/contracts';
+import { BillingPlanType, DUE_DAY_MAX, formatBRL } from '@turmei/contracts';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';

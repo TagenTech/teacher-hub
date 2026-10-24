@@ -1,16 +1,16 @@
-# API Aulinha — build a partir da raiz do monorepo:
-#   docker build -f apps/api/Dockerfile -t aulinha-api .
+# API Turmei — build a partir da raiz do monorepo:
+#   docker build -f apps/api/Dockerfile -t turmei-api .
 FROM node:22-alpine AS build
 RUN corepack enable
 WORKDIR /repo
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc tsconfig.base.json ./
 COPY packages/contracts/package.json packages/contracts/
 COPY apps/api/package.json apps/api/
-RUN pnpm install --frozen-lockfile --filter @aulinha/api...
+RUN pnpm install --frozen-lockfile --filter @turmei/api...
 COPY packages/contracts packages/contracts
 COPY apps/api apps/api
-RUN pnpm --filter @aulinha/contracts build && pnpm --filter @aulinha/api build
-RUN pnpm --filter @aulinha/api deploy --prod /out
+RUN pnpm --filter @turmei/contracts build && pnpm --filter @turmei/api build
+RUN pnpm --filter @turmei/api deploy --prod /out
 
 FROM node:22-alpine
 ENV NODE_ENV=production

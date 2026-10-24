@@ -1,6 +1,6 @@
 'use client';
 
-import { formatDateShort, LessonMode, WEEKDAYS, WEEKDAYS_SHORT, type SlotDto } from '@aulinha/contracts';
+import { formatDateShort, LessonMode, WEEKDAYS, WEEKDAYS_SHORT, type SlotDto } from '@turmei/contracts';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

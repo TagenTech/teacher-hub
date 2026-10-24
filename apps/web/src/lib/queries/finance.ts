@@ -1,6 +1,6 @@
 'use client';
 
-import type { ChargeDto, CreateChargeRequest, RegisterPaymentRequest, UpdateChargeRequest } from '@aulinha/contracts';
+import type { ChargeDto, CreateChargeRequest, RegisterPaymentRequest, UpdateChargeRequest } from '@turmei/contracts';
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { financeApi, type ChargeFilter } from '@/lib/api/finance';
 

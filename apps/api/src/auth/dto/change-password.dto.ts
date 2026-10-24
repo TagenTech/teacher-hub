@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { PASSWORD_MIN_LENGTH, type ChangePasswordRequest } from '@aulinha/contracts';
+import { PASSWORD_MIN_LENGTH, type ChangePasswordRequest } from '@turmei/contracts';
 
 export class ChangePasswordDto implements ChangePasswordRequest {
   @ApiProperty({ required: false, description: 'Não precisa para quem ainda não tem senha (login social)' })

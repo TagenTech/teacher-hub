@@ -6,7 +6,7 @@ import {
   type RecoveryCodesDto,
   type SecurityEventDto,
   type SessionDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import type {
   AuthProvidersDto,
   AuthResponse,
@@ -15,7 +15,7 @@ import type {
   LoginRequest,
   RegisterRequest,
   TeacherDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { api, setAccessToken } from './client';
 
 const json = (body: unknown) => ({ body: JSON.stringify(body) });

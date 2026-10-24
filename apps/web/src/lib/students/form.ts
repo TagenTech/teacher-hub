@@ -10,7 +10,7 @@ import {
   type IsoDate,
   type StudentDetailDto,
   type StudentFields,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { z } from 'zod';
 
 const optionalPhone = (message: string) =>

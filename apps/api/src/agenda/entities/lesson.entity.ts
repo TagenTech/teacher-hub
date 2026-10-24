@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { LessonStatus, type LessonMode } from '@aulinha/contracts';
+import { LessonStatus, type LessonMode } from '@turmei/contracts';
 import { Student } from '../../alunos/entities/student.entity';
 
 /** Uma aula de fato (gerada de um horário fixo ou avulsa). */

@@ -9,7 +9,7 @@ import {
   WEEKDAYS,
   type SlotDto,
   type StudentDetailDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { CalendarPlus, ChevronRight, MapPin, Plus, RefreshCw, Video } from 'lucide-react';
 import * as React from 'react';
 import { toast } from 'sonner';

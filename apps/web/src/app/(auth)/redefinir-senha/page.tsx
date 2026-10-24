@@ -1,6 +1,6 @@
 'use client';
 
-import { PASSWORD_MIN_LENGTH } from '@aulinha/contracts';
+import { PASSWORD_MIN_LENGTH } from '@turmei/contracts';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';

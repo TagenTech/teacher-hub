@@ -55,7 +55,7 @@ export default function DadosPage() {
               <p className="text-sm text-muted-foreground">Alunos, planos, aulas, cobranças e pagamentos.</p>
             </div>
           </div>
-          <Button block loading={busy === 'json'} onClick={() => run('json', () => downloadFile('/me/export', 'aulinha-meus-dados.json'))}>
+          <Button block loading={busy === 'json'} onClick={() => run('json', () => downloadFile('/me/export', 'turmei-meus-dados.json'))}>
             <Download /> Baixar tudo
           </Button>
         </Card>

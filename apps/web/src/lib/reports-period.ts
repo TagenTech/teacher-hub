@@ -1,4 +1,4 @@
-import { addDays, addMonths, firstDayOf, lastDayOf, monthOf, type IsoDate } from '@aulinha/contracts';
+import { addDays, addMonths, firstDayOf, lastDayOf, monthOf, type IsoDate } from '@turmei/contracts';
 
 export const PERIODS = [
   { v: 'mes', l: 'Este mês' },

@@ -9,7 +9,7 @@ import {
   PayerBadge,
   PLAN_TYPE_LABEL,
   type ReportFilters,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Bookmark, Download, SlidersHorizontal, X } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';

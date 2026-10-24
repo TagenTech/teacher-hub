@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import type { CookieOptions, Request, Response } from 'express';
-import type { AuthProvidersDto, AuthResponse, LoginResult, MfaSetupDto, RecoveryCodesDto } from '@aulinha/contracts';
+import type { AuthProvidersDto, AuthResponse, LoginResult, MfaSetupDto, RecoveryCodesDto } from '@turmei/contracts';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
 import type { JwtPayload } from '../common/types/jwt-payload';
@@ -17,8 +17,8 @@ import { DeleteAccountDto, MfaCodeDto, MfaVerifyDto } from './dto/mfa.dto';
 import { ForgotPasswordDto, RegisterDto, ResetPasswordDto, VerifyEmailDto } from './dto/register.dto';
 import { OAuthService, type OAuthState } from './oauth.service';
 
-export const REFRESH_COOKIE = 'aulinha_refresh';
-const OAUTH_COOKIE = 'aulinha_oauth';
+export const REFRESH_COOKIE = 'turmei_refresh';
+const OAUTH_COOKIE = 'turmei_oauth';
 
 @ApiTags('auth')
 @Controller('auth')

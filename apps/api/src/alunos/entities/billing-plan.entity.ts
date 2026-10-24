@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import type { BillingPlanType } from '@aulinha/contracts';
+import type { BillingPlanType } from '@turmei/contracts';
 import { Student } from './student.entity';
 
 /**

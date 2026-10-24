@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { addDays, displayName, LessonStatus, todayIn, zonedToUtc, type CalendarFeedDto } from '@aulinha/contracts';
+import { addDays, displayName, LessonStatus, todayIn, zonedToUtc, type CalendarFeedDto } from '@turmei/contracts';
 import { Lesson } from '../agenda/entities/lesson.entity';
 import { TeachersService } from '../professor/teachers.service';
 
@@ -46,10 +46,10 @@ export class CalendarService {
     const lines = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//Aulinha//Agenda//PT-BR',
+      'PRODID:-//Turmei//Agenda//PT-BR',
       'CALSCALE:GREGORIAN',
       'METHOD:PUBLISH',
-      'X-WR-CALNAME:Aulinha · Aulas',
+      'X-WR-CALNAME:Turmei · Aulas',
       `X-WR-TIMEZONE:${t.timezone}`,
       'REFRESH-INTERVAL;VALUE=DURATION:PT1H',
       'X-PUBLISHED-TTL:PT1H',
@@ -57,7 +57,7 @@ export class CalendarService {
     for (const l of lessons) {
       lines.push(
         'BEGIN:VEVENT',
-        `UID:${l.id}@aulinha`,
+        `UID:${l.id}@turmei`,
         `DTSTAMP:${now}`,
         `DTSTART:${stamp(l.startsAt)}`,
         `DTEND:${stamp(l.endsAt)}`,

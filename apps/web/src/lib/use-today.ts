@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_TIMEZONE, todayIn, type IsoDate } from '@aulinha/contracts';
+import { DEFAULT_TIMEZONE, todayIn, type IsoDate } from '@turmei/contracts';
 import { useAuth } from './auth';
 import { useHydrated } from './use-hydrated';
 

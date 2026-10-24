@@ -21,7 +21,7 @@ import {
   weekdayOf,
   zonedToUtc,
   type StudentColor,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { AppModule } from '../app.module';
 import { BillingPlan } from '../alunos/entities/billing-plan.entity';
 import { Student } from '../alunos/entities/student.entity';

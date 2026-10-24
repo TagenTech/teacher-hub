@@ -6,7 +6,7 @@ import type {
   CreateStudentRequest,
   StudentDetailDto,
   UpdateStudentRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { studentsApi } from '@/lib/api/students';
 

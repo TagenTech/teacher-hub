@@ -8,7 +8,7 @@ import {
   todayIn,
   zonedToUtc,
   type ScheduleBlockDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { TeachersService } from '../professor/teachers.service';
 import { CreateScheduleBlockDto } from './dto/agenda.dto';
 import { Lesson } from './entities/lesson.entity';

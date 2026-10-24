@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, formatBRL, formatDateLong, PAYMENT_METHOD_LABEL } from '@aulinha/contracts';
+import { displayName, formatBRL, formatDateLong, PAYMENT_METHOD_LABEL } from '@turmei/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { Printer, Share2 } from 'lucide-react';
 import { useParams } from 'next/navigation';

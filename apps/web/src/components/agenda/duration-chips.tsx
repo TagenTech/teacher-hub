@@ -1,6 +1,6 @@
 'use client';
 
-import { formatDuration, LESSON_DURATION_OPTIONS } from '@aulinha/contracts';
+import { formatDuration, LESSON_DURATION_OPTIONS } from '@turmei/contracts';
 import { Chip } from '@/components/ui/chip';
 
 export function DurationChips({ value, onChange }: { value: number; onChange: (v: number) => void }) {

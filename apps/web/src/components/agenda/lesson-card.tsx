@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, LessonStatus, type LessonDto } from '@aulinha/contracts';
+import { displayName, LessonStatus, type LessonDto } from '@turmei/contracts';
 import { Check, MapPin, RefreshCw, Video, X } from 'lucide-react';
 import * as React from 'react';
 import { StudentAvatar } from '@/components/students/student-avatar';

@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* Aulinha — design tokens. Paleta "meiga": lavanda, rosa, menta, manteiga e coral. */
+/* Turmei — design tokens. Paleta "meiga": lavanda, rosa, menta, manteiga e coral. */
 :root {
   color-scheme: light;
   --background: #fbf8ff;

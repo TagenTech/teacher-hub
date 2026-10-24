@@ -1,4 +1,4 @@
-import { LESSON_STATUS_LABEL, LessonStatus } from '@aulinha/contracts';
+import { LESSON_STATUS_LABEL, LessonStatus } from '@turmei/contracts';
 import { cn } from '@/lib/utils';
 
 const TONE: Record<LessonStatus, string> = {

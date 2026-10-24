@@ -1,4 +1,4 @@
-import type { CalendarFeedDto, PushStatusDto, PushSubscriptionRequest } from '@aulinha/contracts';
+import type { CalendarFeedDto, PushStatusDto, PushSubscriptionRequest } from '@turmei/contracts';
 import { api } from './client';
 
 export const remindersApi = {

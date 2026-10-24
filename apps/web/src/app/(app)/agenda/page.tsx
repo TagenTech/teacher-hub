@@ -13,7 +13,7 @@ import {
   WEEKDAYS_SHORT,
   type IsoDate,
   type LessonDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { CalendarPlus, ChevronLeft, ChevronRight } from 'lucide-react';
 import * as React from 'react';
 import { LessonCard } from '@/components/agenda/lesson-card';
@@ -34,7 +34,7 @@ const VIEWS: { v: View; l: string }[] = [
   { v: 'semana', l: 'Semana' },
   { v: 'mes', l: 'Mês' },
 ];
-const VIEW_KEY = 'aulinha_agenda_view';
+const VIEW_KEY = 'turmei_agenda_view';
 
 function savedView(): View {
   try {

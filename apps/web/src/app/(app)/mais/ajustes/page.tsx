@@ -5,7 +5,7 @@ import {
   fillTemplate,
   PixKeyType,
   type UpdateSettingsRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { KeyRound, User } from 'lucide-react';
 import * as React from 'react';
 import { toast } from 'sonner';

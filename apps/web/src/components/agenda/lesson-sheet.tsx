@@ -7,7 +7,7 @@ import {
   LessonStatus,
   zonedToUtc,
   type LessonDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { CalendarClock, ExternalLink, MapPin, NotebookPen, Trash2, Undo2, Video } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
@@ -25,7 +25,7 @@ import { capitalize, dateOf, relativeDay, timeOf } from '@/lib/format';
 import { useAttendance, useLesson, useRemoveLesson, useReschedule, useUpdateLesson } from '@/lib/queries/agenda';
 import { useToday } from '@/lib/use-today';
 import { useTz } from '@/lib/use-tz';
-import { addDays } from '@aulinha/contracts';
+import { addDays } from '@turmei/contracts';
 import { cn, haptic } from '@/lib/utils';
 import { LessonStatusBadge } from './lesson-status';
 

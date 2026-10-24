@@ -14,7 +14,7 @@ export class ExportService {
     );
     return {
       exportedAt: new Date().toISOString(),
-      app: 'Aulinha',
+      app: 'Turmei',
       teacher,
       students: await q('SELECT * FROM students WHERE teacher_id = $1 ORDER BY name'),
       billingPlans: await q('SELECT * FROM billing_plans WHERE teacher_id = $1 ORDER BY valid_from'),

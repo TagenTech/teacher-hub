@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, MaxLength, Validate, ValidateNested, ValidatorConstraint, type ValidatorConstraintInterface } from 'class-validator';
 import { isAllowedPushEndpoint } from '../push-endpoint';
-import type { PushSubscriptionRequest } from '@aulinha/contracts';
+import type { PushSubscriptionRequest } from '@turmei/contracts';
 
 class KeysDto {
   @ApiProperty()

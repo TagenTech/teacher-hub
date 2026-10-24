@@ -1,6 +1,6 @@
 'use client';
 
-import { describePlan, formatDateLong, type StudentDetailDto } from '@aulinha/contracts';
+import { describePlan, formatDateLong, type StudentDetailDto } from '@turmei/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CalendarDays } from 'lucide-react';
 import * as React from 'react';

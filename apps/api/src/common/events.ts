@@ -1,5 +1,5 @@
 /** Eventos internos entre módulos (via @nestjs/event-emitter), evitando dependências circulares. */
-import type { StudentStatus } from '@aulinha/contracts';
+import type { StudentStatus } from '@turmei/contracts';
 
 export const Events = {
   STUDENT_STATUS_CHANGED: 'student.status-changed',

@@ -9,10 +9,10 @@ const nunito = Nunito({ subsets: ['latin'], variable: '--font-nunito', weight: [
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: { default: 'Aulinha', template: '%s · Aulinha' },
+  title: { default: 'Turmei', template: '%s · Turmei' },
   description: 'Suas aulas, alunos e mensalidades num só lugar.',
-  applicationName: 'Aulinha',
-  appleWebApp: { capable: true, title: 'Aulinha', statusBarStyle: 'default' },
+  applicationName: 'Turmei',
+  appleWebApp: { capable: true, title: 'Turmei', statusBarStyle: 'default' },
   formatDetection: { telephone: false },
   icons: {
     icon: [{ url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }],

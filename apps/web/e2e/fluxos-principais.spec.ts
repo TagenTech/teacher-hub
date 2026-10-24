@@ -7,7 +7,7 @@ import { expect, test, type Page } from '@playwright/test';
  */
 test.describe.configure({ mode: 'serial' });
 
-const PROFESSORA = { name: 'Paula Playwright', email: `paula+${Date.now()}@aulinha.test`, password: 'senha-forte-123' };
+const PROFESSORA = { name: 'Paula Playwright', email: `paula+${Date.now()}@turmei.test`, password: 'senha-forte-123' };
 const ALUNA = 'Bruna Teste';
 
 let page: Page;

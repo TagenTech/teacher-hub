@@ -8,7 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import type { ChargeKind } from '@aulinha/contracts';
+import type { ChargeKind } from '@turmei/contracts';
 import { Student } from '../../alunos/entities/student.entity';
 import { Payment } from './payment.entity';
 

@@ -13,7 +13,7 @@ import {
   weekdayOf,
   zonedToUtc,
   type SlotDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { Student } from '../alunos/entities/student.entity';
 import { Events, type StudentStatusChangedEvent } from '../common/events';
 import { TeachersService } from '../professor/teachers.service';

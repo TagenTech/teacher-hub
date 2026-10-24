@@ -1,4 +1,4 @@
-import type { ApiError as ApiErrorBody, AuthResponse } from '@aulinha/contracts';
+import type { ApiError as ApiErrorBody, AuthResponse } from '@turmei/contracts';
 
 /** O navegador chama sempre a mesma origem; o Next (dev) / nginx (prod) repassa para a API. */
 const BASE = '/api/v1';

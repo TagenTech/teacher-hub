@@ -1,6 +1,6 @@
 'use client';
 
-import { describePlan, displayName, normalizePlanInput, todayIn, DEFAULT_TIMEZONE } from '@aulinha/contracts';
+import { describePlan, displayName, normalizePlanInput, todayIn, DEFAULT_TIMEZONE } from '@turmei/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';

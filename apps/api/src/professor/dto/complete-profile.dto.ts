@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsIn, IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
-import { normalizeCpf, type CompleteProfileRequest } from '@aulinha/contracts';
+import { normalizeCpf, type CompleteProfileRequest } from '@turmei/contracts';
 import { EmptyToNull, IsBrPhone } from '../../common/validators/br.validators';
 
 const UFS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];

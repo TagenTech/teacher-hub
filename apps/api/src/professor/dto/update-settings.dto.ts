@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
-import { PixKeyType, type UpdateSettingsRequest } from '@aulinha/contracts';
+import { PixKeyType, type UpdateSettingsRequest } from '@turmei/contracts';
 import { EmptyToNull } from '../../common/validators/br.validators';
 
 const trim = () => Transform(({ value }) => (typeof value === 'string' ? value.trim() : value));

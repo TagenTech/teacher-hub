@@ -20,7 +20,7 @@ import {
   type CreateStudentRequest,
   type StudentColor,
   type StudentFields,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { EmptyToNull, IsBrPhone, IsIsoDate } from '../../common/validators/br.validators';
 import { BillingPlanInputDto } from './billing-plan.dto';
 

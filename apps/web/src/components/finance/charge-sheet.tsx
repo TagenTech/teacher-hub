@@ -8,7 +8,7 @@ import {
   formatDateShort,
   PAYMENT_METHOD_LABEL,
   type ChargeDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { Ban, HandCoins, Pencil, ReceiptText, RotateCcw, Trash2, Undo2 } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';

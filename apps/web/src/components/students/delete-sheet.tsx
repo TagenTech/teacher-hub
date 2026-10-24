@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, type StudentDetailDto } from '@aulinha/contracts';
+import { displayName, type StudentDetailDto } from '@turmei/contracts';
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';

@@ -1,6 +1,6 @@
 'use client';
 
-import { addDays, displayName, LessonStatus, overlappingIds } from '@aulinha/contracts';
+import { addDays, displayName, LessonStatus, overlappingIds } from '@turmei/contracts';
 import { BellRing, CalendarClock, Check, ChevronRight, RefreshCw, UserRoundPlus, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';

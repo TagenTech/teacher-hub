@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, formatBRL } from '@aulinha/contracts';
+import { displayName, formatBRL } from '@turmei/contracts';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { dueLabel } from '@/components/finance/charge-row';

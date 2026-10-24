@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { createHash } from 'crypto';
-import { SecurityEventType } from '@aulinha/contracts';
+import { SecurityEventType } from '@turmei/contracts';
 import { TeachersService } from '../professor/teachers.service';
 import type { RequestContext } from '../security/request-context';
 import { SecurityEventsService } from '../security/security-events.service';

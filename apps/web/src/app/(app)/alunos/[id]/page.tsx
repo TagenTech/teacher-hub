@@ -10,7 +10,7 @@ import {
   StudentStatus,
   whatsappLink,
   type StudentDetailDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import {
   Archive,
   Cake,

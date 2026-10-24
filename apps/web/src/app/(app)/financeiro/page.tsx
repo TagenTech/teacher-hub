@@ -1,6 +1,6 @@
 'use client';
 
-import { addMonths, formatBRL, monthLabel, monthOf } from '@aulinha/contracts';
+import { addMonths, formatBRL, monthLabel, monthOf } from '@turmei/contracts';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import * as React from 'react';

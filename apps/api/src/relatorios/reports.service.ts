@@ -22,7 +22,7 @@ import {
   type PaymentMethod,
   type ReportSummaryDto,
   type SavedFilterDto,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { BillingPlan } from '../alunos/entities/billing-plan.entity';
 import { Student } from '../alunos/entities/student.entity';
 import { Lesson } from '../agenda/entities/lesson.entity';
@@ -290,7 +290,7 @@ export class ReportsService {
     };
     // BOM + ";" abrem certinho no Excel em português.
     const body = '﻿' + [header, ...rows].map((r) => r.map(cell).join(';')).join('\r\n') + '\r\n';
-    return { filename: `aulinha-${type}-${q.from}-a-${q.to}.csv`, body };
+    return { filename: `turmei-${type}-${q.from}-a-${q.to}.csv`, body };
   }
 
   // ---------- filtros salvos ----------

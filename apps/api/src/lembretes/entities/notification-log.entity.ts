@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-import type { NotificationType } from '@aulinha/contracts';
+import type { NotificationType } from '@turmei/contracts';
 
 /** O que já foi avisado — o índice único impede lembrete duplicado. */
 @Entity('notification_logs')

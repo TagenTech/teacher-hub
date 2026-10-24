@@ -1,6 +1,6 @@
 'use client';
 
-import { displayName, LessonStatus, type IsoDate, type LessonDto, type MakeupCreditDto } from '@aulinha/contracts';
+import { displayName, LessonStatus, type IsoDate, type LessonDto, type MakeupCreditDto } from '@turmei/contracts';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { ApiError } from '@/lib/api/client';

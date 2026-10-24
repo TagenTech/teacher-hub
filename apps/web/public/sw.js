@@ -1,4 +1,4 @@
-/* Aulinha — service worker.
+/* Turmei — service worker.
  * - Navegação: rede primeiro; sem internet, mostra /offline.
  * - Arquivos estáticos (/_next/static, /icons): cache primeiro (têm hash no nome).
  * - /api nunca é cacheada (dados financeiros e sessão).
@@ -7,7 +7,7 @@
 const VERSION = 'v2';
 // Em desenvolvimento (registrado com ?dev=1) só cuidamos de push, sem cache.
 const DEV = new URL(self.location.href).searchParams.has('dev');
-const STATIC_CACHE = `aulinha-static-${VERSION}`;
+const STATIC_CACHE = `turmei-static-${VERSION}`;
 const OFFLINE_URL = '/offline';
 
 self.addEventListener('install', (event) => {
@@ -55,7 +55,7 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   const data = event.data ? event.data.json() : {};
   event.waitUntil(
-    self.registration.showNotification(data.title || 'Aulinha', {
+    self.registration.showNotification(data.title || 'Turmei', {
       body: data.body,
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-192.png',

@@ -7,7 +7,7 @@ import {
   weekdayOf,
   zonedParts,
   zonedToUtc,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

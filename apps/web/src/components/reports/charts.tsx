@@ -1,6 +1,6 @@
 'use client';
 
-import { formatBRL, monthLabel } from '@aulinha/contracts';
+import { formatBRL, monthLabel } from '@turmei/contracts';
 import * as React from 'react';
 import { capitalize } from '@/lib/format';
 import { cn } from '@/lib/utils';

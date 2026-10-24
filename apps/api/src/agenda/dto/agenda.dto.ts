@@ -25,7 +25,7 @@ import {
   type RescheduleRequest,
   type UpdateLessonRequest,
   type UpdateSlotRequest,
-} from '@aulinha/contracts';
+} from '@turmei/contracts';
 import { EmptyToNull, IsIsoDate } from '../../common/validators/br.validators';
 
 const trim = () => Transform(({ value }) => (typeof value === 'string' ? value.trim() : value));

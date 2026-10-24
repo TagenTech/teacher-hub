@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
  * Testes de navegador dos fluxos principais.
  * Sobe uma API e um web próprios (portas 3210/3211) com um banco zerado a cada execução,
  * sem mexer no banco nem nos servidores de desenvolvimento.
- *   pnpm --filter @aulinha/web test:e2e            (E2E_SKIP_BUILD=1 reaproveita o último build)
+ *   pnpm --filter @turmei/web test:e2e            (E2E_SKIP_BUILD=1 reaproveita o último build)
  */
 const API_PORT = 3210;
 const WEB_PORT = 3211;

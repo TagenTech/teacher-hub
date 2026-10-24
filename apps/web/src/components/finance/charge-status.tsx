@@ -1,4 +1,4 @@
-import { CHARGE_STATUS_LABEL, ChargeStatus } from '@aulinha/contracts';
+import { CHARGE_STATUS_LABEL, ChargeStatus } from '@turmei/contracts';
 import { cn } from '@/lib/utils';
 
 const TONE: Record<ChargeStatus, string> = {

@@ -1,4 +1,4 @@
-import { formatDateShort, StudentStatus, type IsoDate } from '@aulinha/contracts';
+import { formatDateShort, StudentStatus, type IsoDate } from '@turmei/contracts';
 import { cn } from '@/lib/utils';
 
 export function StudentStatusBadge({

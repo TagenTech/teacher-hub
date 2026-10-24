@@ -1,4 +1,4 @@
-import type { LessonDto, MakeupCreditDto, ScheduleBlockDto, SlotDto } from '@aulinha/contracts';
+import type { LessonDto, MakeupCreditDto, ScheduleBlockDto, SlotDto } from '@turmei/contracts';
 import { toStudentRef } from '../common/utils/student-ref';
 import type { Lesson } from './entities/lesson.entity';
 import type { MakeupCredit } from './entities/makeup-credit.entity';
