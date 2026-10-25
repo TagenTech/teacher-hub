@@ -18,6 +18,8 @@ import { HealthController } from './health.controller';
 import { MailModule } from './mail/mail.module';
 import { SecurityModule } from './security/security.module';
 import { TeachersModule } from './professor/teachers.module';
+import { getDatabaseOptions } from './database/db-options';
+import { JobsModule } from './jobs/jobs.module';
 
 @Module({
   imports: [
@@ -27,18 +29,15 @@ import { TeachersModule } from './professor/teachers.module';
       envFilePath: [join(__dirname, '..', '.env.local'), join(__dirname, '..', '.env')],
     }),
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 300 }]),
-    ScheduleModule.forRoot(),
+    ...(process.env.SCHEDULER_ENABLED !== 'false' ? [ScheduleModule.forRoot()] : []),
     EventEmitterModule.forRoot(),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        type: 'postgres' as const,
-        url: config.get<AppConfig['databaseUrl']>('databaseUrl'),
-        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+        ...getDatabaseOptions(config.get<AppConfig['databaseUrl']>('databaseUrl')!),
         autoLoadEntities: true,
         synchronize: config.get<boolean>('typeormSync'),
         // Produção: schema só muda por migration, aplicada na subida da API.
-        migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
         migrationsRun: !config.get<boolean>('typeormSync') && process.env.TYPEORM_MIGRATIONS_RUN !== 'false',
       }),
     }),
@@ -51,6 +50,7 @@ import { TeachersModule } from './professor/teachers.module';
     FinanceModule,
     RemindersModule,
     ReportsModule,
+    JobsModule,
   ],
   controllers: [HealthController],
   providers: [

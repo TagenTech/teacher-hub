@@ -7,6 +7,7 @@ export interface AppConfig {
   port: number;
   apiPrefix: string;
   databaseUrl: string;
+  cronSecret: string | null;
   typeormSync: boolean;
   jwt: { secret: string; accessTtlSeconds: number };
   refreshTtlDays: number;
@@ -44,6 +45,7 @@ export default (): AppConfig => {
     apiPrefix: process.env.API_PREFIX ?? 'v1',
     databaseUrl:
       process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/gestao_aulas',
+    cronSecret: process.env.CRON_SECRET ?? null,
     typeormSync:
       process.env.TYPEORM_SYNC === 'true' ||
       (env === 'development' && process.env.TYPEORM_SYNC !== 'false'),
