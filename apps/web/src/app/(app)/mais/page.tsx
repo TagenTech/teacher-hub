@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Download,
   KeyRound,
+  LifeBuoy,
   LogOut,
   RefreshCw,
   Settings2,
@@ -123,6 +124,7 @@ export default function MaisPage() {
           <Row icon={Download} label="Exportar meus dados" href="/mais/dados" />
           <Row icon={ShieldCheck} label="Segurança da conta" href="/mais/seguranca" hint={teacher && !teacher.mfaEnabled ? '2FA' : undefined} tone="bg-success-soft text-success-soft-foreground" />
           <Row icon={KeyRound} label={teacher?.hasPassword === false ? 'Criar senha' : 'Alterar senha'} onClick={() => setPasswordOpen(true)} />
+          <Row icon={LifeBuoy} label="Relatar um problema" href="/contato" />
         </Group>
 
         <section>

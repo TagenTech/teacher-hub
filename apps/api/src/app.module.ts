@@ -20,6 +20,7 @@ import { SecurityModule } from './security/security.module';
 import { TeachersModule } from './professor/teachers.module';
 import { getDatabaseOptions } from './database/db-options';
 import { JobsModule } from './jobs/jobs.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { JobsModule } from './jobs/jobs.module';
     RemindersModule,
     ReportsModule,
     JobsModule,
+    ContactModule,
   ],
   controllers: [HealthController],
   providers: [

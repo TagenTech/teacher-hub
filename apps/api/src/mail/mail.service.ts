@@ -6,6 +6,7 @@ export interface OutboxMail {
   subject: string;
   html: string;
   link?: string;
+  replyTo?: string;
   at: string;
 }
 
@@ -51,7 +52,7 @@ export class MailService {
     return [...this.outbox].reverse();
   }
 
-  async send(mail: { to: string; subject: string; html: string; link?: string }): Promise<boolean> {
+  async send(mail: { to: string; subject: string; html: string; link?: string; replyTo?: string }): Promise<boolean> {
     if (!this.enabled) {
       // O link carrega um token de uso único: só aparece fora de produção.
       if (isDevEnv()) {
@@ -67,7 +68,13 @@ export class MailService {
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: process.env.MAIL_FROM ?? 'Turmei <onboarding@resend.dev>', to: mail.to, subject: mail.subject, html: mail.html }),
+        body: JSON.stringify({
+          from: process.env.MAIL_FROM ?? 'Turmei <onboarding@resend.dev>',
+          to: mail.to,
+          subject: mail.subject,
+          html: mail.html,
+          ...(mail.replyTo ? { reply_to: mail.replyTo } : {}),
+        }),
         signal: AbortSignal.timeout(10_000),
       });
       if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
@@ -100,6 +107,19 @@ export class MailService {
         'Vamos criar uma senha nova',
         'Recebemos um pedido para redefinir a senha da sua conta. O link vale por 1 hora. Se não foi você, é só ignorar — nada muda.',
         { label: 'Criar nova senha', url },
+      ),
+    });
+  }
+
+  /** Mensagem de contato (formulário público). Texto do usuário sempre escapado. */
+  sendContact(to: string, name: string, email: string, message: string) {
+    return this.send({
+      to,
+      replyTo: email,
+      subject: `[Turmei] Contato de ${name.replace(/[\r\n\[\]]/g, ' ')}`,
+      html: layout(
+        'Mensagem de contato',
+        `<p><strong>${escapeHtml(name)}</strong> (${escapeHtml(email)}) escreveu:</p><p style="white-space:pre-line">${escapeHtml(message)}</p>`,
       ),
     });
   }
