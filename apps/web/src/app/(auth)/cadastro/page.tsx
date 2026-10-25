@@ -19,12 +19,18 @@ import { ApiError } from '@/lib/api/client';
 import { useAuth } from '@/lib/auth';
 import { cn, haptic } from '@/lib/utils';
 
-const schema = z.object({
-  name: z.string().trim().min(2, 'Como podemos te chamar?').max(120),
-  email: z.string().trim().min(1, 'Informe seu e-mail').email('Esse e-mail não parece certo'),
-  password: z.string().min(PASSWORD_MIN_LENGTH, `Use pelo menos ${PASSWORD_MIN_LENGTH} caracteres`).max(128),
-  acceptTerms: z.literal(true, { error: 'Aceite os termos para continuar' }),
-});
+const schema = z
+  .object({
+    name: z.string().trim().min(2, 'Como podemos te chamar?').max(120),
+    email: z.string().trim().min(1, 'Informe seu e-mail').email('Esse e-mail não parece certo'),
+    password: z.string().min(PASSWORD_MIN_LENGTH, `Use pelo menos ${PASSWORD_MIN_LENGTH} caracteres`).max(128),
+    confirmPassword: z.string().min(1, 'Repita a senha'),
+    acceptTerms: z.literal(true, { error: 'Aceite os termos para continuar' }),
+  })
+  .refine((v) => v.confirmPassword === v.password, {
+    message: 'As senhas precisam ser iguais',
+    path: ['confirmPassword'],
+  });
 type FormValues = z.infer<typeof schema>;
 
 export default function CadastroPage() {
@@ -44,7 +50,7 @@ export default function CadastroPage() {
   const onSubmit = handleSubmit(async (v) => {
     setFormError(null);
     try {
-      await signUp(v);
+      await signUp({ name: v.name, email: v.email, password: v.password, acceptTerms: v.acceptTerms });
       haptic([15, 60, 25]);
       toast.success('Conta criada! Mandamos um link para confirmar seu e-mail 💌');
       router.replace('/hoje?bemvindo=1');
@@ -77,6 +83,9 @@ export default function CadastroPage() {
           </Field>
           <Field label="Senha" htmlFor="password" error={errors.password?.message}>
             <PasswordInput id="password" autoComplete="new-password" placeholder={`Mínimo ${PASSWORD_MIN_LENGTH} caracteres`} invalid={!!errors.password} {...register('password')} />
+          </Field>
+          <Field label="Confirmar senha" htmlFor="confirmPassword" error={errors.confirmPassword?.message}>
+            <PasswordInput id="confirmPassword" autoComplete="new-password" placeholder="Repita a senha" invalid={!!errors.confirmPassword} {...register('confirmPassword')} />
           </Field>
           {password ? (
             <div className="-mt-2 flex items-center gap-2 pl-1" aria-live="polite">
