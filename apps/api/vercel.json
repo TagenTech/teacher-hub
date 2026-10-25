@@ -1,12 +1,13 @@
 {
   "regions": ["gru1"],
-  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@turmei/api",
+  "framework": null,
+  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@turmei/api && mkdir -p apps/api/public",
+  "outputDirectory": "public",
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
   "functions": {
     "api/index.js": {
       "includeFiles": "dist/**",
       "maxDuration": 60
     }
-  },
-  "framework": null
+  }
 }

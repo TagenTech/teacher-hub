@@ -4,9 +4,25 @@
 -- pg_cron usa UTC. Os horários abaixo equivalem aos de antes em America/Sao_Paulo (UTC-3).
 
 -- 1) Segredos no Vault (troque os valores; CRON_SECRET deve ser idêntico ao da Vercel).
---    Para trocar depois: select vault.update_secret(id, 'novo-valor') from vault.secrets where name = '...';
-select vault.create_secret('https://SEU-PROJETO-API.vercel.app', 'turmei_api_url');
-select vault.create_secret('COLE-AQUI-O-CRON_SECRET', 'turmei_cron_secret');
+--    Pode rodar de novo para trocar os valores.
+do $$
+declare
+  secrets text[][] := array[
+    ['turmei_api_url',     'https://SEU-PROJETO-API.vercel.app'],
+    ['turmei_cron_secret', 'COLE-AQUI-O-CRON_SECRET']
+  ];
+  s text[];
+  existing uuid;
+begin
+  foreach s slice 1 in array secrets loop
+    select id into existing from vault.secrets where name = s[1];
+    if existing is null then
+      perform vault.create_secret(s[2], s[1]);
+    else
+      perform vault.update_secret(existing, s[2]);
+    end if;
+  end loop;
+end $$;
 
 -- 2) Jobs. cron.schedule com o mesmo nome substitui o agendamento existente (pode rodar de novo).
 do $$

@@ -69,6 +69,7 @@ Em dev o schema sincroniza sozinho (`TYPEORM_SYNC=true`); em produção só por 
 ## Produção (Docker)
 
 > Passo a passo do que falta para colocar no ar (chaves, domínio, e-mail, LGPD, GitHub): **[docs/LANCAMENTO.md](docs/LANCAMENTO.md)**.
+> Deploy em Cloudflare + Vercel + Supabase: **[docs/DEPLOY_VERCEL_SUPABASE.md](docs/DEPLOY_VERCEL_SUPABASE.md)**.
 
 ```bash
 cp .env.prod.example .env.prod      # DOMAIN, senhas, JWT_SECRET, DATA_ENCRYPTION_KEY, BACKUP_PASSPHRASE, VAPID
