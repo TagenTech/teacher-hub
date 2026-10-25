@@ -18,6 +18,7 @@ import {
 } from '@turmei/contracts';
 import { Events, type PlanChangedEvent, type StudentStatusChangedEvent } from '../common/events';
 import { TeachersService } from '../professor/teachers.service';
+import { Teacher } from '../professor/entities/teacher.entity';
 import { CreateBillingPlanDto } from './dto/billing-plan.dto';
 import {
   ChangeStudentStatusDto,
@@ -193,9 +194,11 @@ export class StudentsService {
   /** Alunos pausados com data de volta vencida voltam a ATIVO (no fuso de cada professor). */
   @Cron(CronExpression.EVERY_HOUR)
   async resumeExpiredPauses(): Promise<void> {
+    const studentsTable = this.db.getMetadata(Student).tableName;
+    const teachersTable = this.db.getMetadata(Teacher).tableName;
     const result = await this.db.query(
-      `UPDATE students s SET status = $1, paused_until = NULL, updated_at = now()
-         FROM teachers t
+      `UPDATE "${studentsTable}" s SET status = $1, paused_until = NULL, updated_at = now()
+         FROM "${teachersTable}" t
         WHERE s.teacher_id = t.id AND s.status = $2 AND s.paused_until IS NOT NULL
           AND s.paused_until < (now() AT TIME ZONE t.timezone)::date
         RETURNING s.id, s.teacher_id`,

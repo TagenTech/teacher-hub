@@ -8,8 +8,10 @@ import request from 'supertest';
 import { DataSource } from 'typeorm';
 import { addDays, monthOf, todayIn, weekdayOf } from '@turmei/contracts';
 import { currentStep, hotp } from '../src/auth/totp';
+import { Student } from '../src/alunos/entities/student.entity';
+import { Teacher } from '../src/professor/entities/teacher.entity';
 import { TeachersService } from '../src/professor/teachers.service';
-import { createTestApp } from './helpers';
+import { createTestApp, quotedTable } from './helpers';
 
 describe('Turmei (e2e)', () => {
   let app: INestApplication;
@@ -135,7 +137,8 @@ describe('Turmei (e2e)', () => {
     expect(prof.body).toMatchObject({ emailVerified: true, profileComplete: true, cpfMasked: '***.982.247-**' });
     expect(JSON.stringify(prof.body)).not.toContain('52998224725');
     // No banco: só cifra + índice cego, nunca o número.
-    const [row] = await app.get(DataSource).query(`SELECT * FROM teachers WHERE email = 'nova@turmei.test'`);
+    const db = app.get(DataSource);
+    const [row] = await db.query(`SELECT * FROM ${quotedTable(db, Teacher)} WHERE email = 'nova@turmei.test'`);
     expect(JSON.stringify(row)).not.toContain('52998224725');
     expect(row.cpf_encrypted).toMatch(/^v1:/);
   });
@@ -241,9 +244,13 @@ describe('Turmei (e2e)', () => {
     await http.post('/v1/auth/delete-account').set(a).send({ confirmEmail: 'sai@turmei.test', password: 'senha-sai-123' }).expect(204);
     await http.get('/v1/students').set(a).expect(401);
     const db = app.get(DataSource);
-    const [{ n }] = await db.query(`SELECT count(*)::int AS n FROM teachers WHERE email = 'sai@turmei.test'`);
+    const teachers = quotedTable(db, Teacher);
+    const students = quotedTable(db, Student);
+    const [{ n }] = await db.query(`SELECT count(*)::int AS n FROM ${teachers} WHERE email = 'sai@turmei.test'`);
     expect(n).toBe(0);
-    const [{ orphans }] = await db.query(`SELECT count(*)::int AS orphans FROM students s WHERE NOT EXISTS (SELECT 1 FROM teachers t WHERE t.id = s.teacher_id)`);
+    const [{ orphans }] = await db.query(
+      `SELECT count(*)::int AS orphans FROM ${students} s WHERE NOT EXISTS (SELECT 1 FROM ${teachers} t WHERE t.id = s.teacher_id)`,
+    );
     expect(orphans).toBe(0);
   });
 

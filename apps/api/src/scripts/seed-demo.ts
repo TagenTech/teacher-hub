@@ -27,6 +27,7 @@ import { BillingPlan } from '../alunos/entities/billing-plan.entity';
 import { Student } from '../alunos/entities/student.entity';
 import { StudentsService } from '../alunos/students.service';
 import { Lesson } from '../agenda/entities/lesson.entity';
+import { ScheduleBlock } from '../agenda/entities/schedule-block.entity';
 import { SlotsService } from '../agenda/slots.service';
 import { BillingService } from '../financeiro/billing.service';
 import { Charge } from '../financeiro/entities/charge.entity';
@@ -97,7 +98,8 @@ async function main() {
 
   console.log('Limpando alunos do professor de demonstração…');
   await repo(Student).delete({ teacherId: teacher.id });
-  await db.query('DELETE FROM schedule_blocks WHERE teacher_id = $1', [teacher.id]);
+  const scheduleBlocksTable = db.getMetadata(ScheduleBlock).tableName;
+  await db.query(`DELETE FROM "${scheduleBlocksTable}" WHERE teacher_id = $1`, [teacher.id]);
 
   for (const d of DEMO) {
     const st = await studentsSvc.create(teacher.id, {

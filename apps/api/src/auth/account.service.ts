@@ -9,25 +9,42 @@ import { SecurityEventsService } from '../security/security-events.service';
 import { SessionRevocationService } from '../security/session-revocation.service';
 import { AuthService } from './auth.service';
 import { DeleteAccountDto } from './dto/mfa.dto';
+import { AuthIdentity } from './entities/auth-identity.entity';
+import { EmailToken } from './entities/email-token.entity';
+import { MfaRecoveryCode } from './entities/mfa-recovery-code.entity';
+import { RefreshToken } from './entities/refresh-token.entity';
+import { Lesson } from '../agenda/entities/lesson.entity';
+import { MakeupCredit } from '../agenda/entities/makeup-credit.entity';
+import { RecurringSlot } from '../agenda/entities/recurring-slot.entity';
+import { ScheduleBlock } from '../agenda/entities/schedule-block.entity';
+import { BillingPlan } from '../alunos/entities/billing-plan.entity';
+import { Student } from '../alunos/entities/student.entity';
+import { Charge } from '../financeiro/entities/charge.entity';
+import { Payment } from '../financeiro/entities/payment.entity';
+import { NotificationLog } from '../lembretes/entities/notification-log.entity';
+import { PushSubscriptionEntity } from '../lembretes/entities/push-subscription.entity';
+import { SavedFilter } from '../relatorios/entities/saved-filter.entity';
+import { SecurityEvent } from '../security/entities/security-event.entity';
+import { Teacher } from '../professor/entities/teacher.entity';
 
 /** Tabelas com dados do professor, na ordem segura para apagar (filhos antes dos pais). */
-const OWNED_TABLES = [
-  'payments',
-  'charges',
-  'lessons',
-  'makeup_credits',
-  'recurring_slots',
-  'billing_plans',
-  'students',
-  'schedule_blocks',
-  'notification_logs',
-  'push_subscriptions',
-  'saved_filters',
-  'refresh_tokens',
-  'email_tokens',
-  'mfa_recovery_codes',
-  'security_events',
-  'auth_identities',
+const OWNED_ENTITIES = [
+  Payment,
+  Charge,
+  Lesson,
+  MakeupCredit,
+  RecurringSlot,
+  BillingPlan,
+  Student,
+  ScheduleBlock,
+  NotificationLog,
+  PushSubscriptionEntity,
+  SavedFilter,
+  RefreshToken,
+  EmailToken,
+  MfaRecoveryCode,
+  SecurityEvent,
+  AuthIdentity,
 ];
 
 /** Exclusão definitiva da conta e de todos os dados (LGPD, art. 18). */
@@ -53,8 +70,12 @@ export class AccountService {
       throw new UnauthorizedException('Código de verificação inválido');
     }
     await this.db.transaction(async (em) => {
-      for (const table of OWNED_TABLES) await em.query(`DELETE FROM "${table}" WHERE "teacher_id" = $1`, [teacherId]);
-      await em.query('DELETE FROM "teachers" WHERE "id" = $1', [teacherId]);
+      for (const entity of OWNED_ENTITIES) {
+        const table = this.db.getMetadata(entity).tableName;
+        await em.query(`DELETE FROM "${table}" WHERE "teacher_id" = $1`, [teacherId]);
+      }
+      const teachersTable = this.db.getMetadata(Teacher).tableName;
+      await em.query(`DELETE FROM "${teachersTable}" WHERE "id" = $1`, [teacherId]);
     });
     this.revocation.markDeleted(teacherId);
     // Sem dado pessoal: só um hash para correlacionar com logs, se preciso.

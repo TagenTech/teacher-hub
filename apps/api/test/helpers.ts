@@ -2,12 +2,13 @@ import type { INestApplication } from '@nestjs/common';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { Test } from '@nestjs/testing';
 import type request from 'supertest';
-import { DataSource } from 'typeorm';
+import { DataSource, type EntityTarget } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
 
-export const ALL_TABLES =
-  'teachers, auth_identities, email_tokens, mfa_recovery_codes, security_events, students, billing_plans, recurring_slots, lessons, makeup_credits, schedule_blocks, charges, payments, refresh_tokens, saved_filters, notification_logs, push_subscriptions';
+export function quotedTable<T extends object>(db: DataSource, entity: EntityTarget<T>) {
+  return `"${db.getMetadata(entity).tableName}"`;
+}
 
 /** Sobe a API completa (mesma configuração do main.ts) com o banco de teste zerado. */
 export async function createTestApp(): Promise<INestApplication> {
@@ -15,7 +16,8 @@ export async function createTestApp(): Promise<INestApplication> {
   const app = mod.createNestApplication<NestExpressApplication>();
   configureApp(app);
   await app.init();
-  await app.get(DataSource).query(`TRUNCATE ${ALL_TABLES} CASCADE`);
+  const tables = app.get(DataSource).entityMetadatas.map(({ tableName }) => `"${tableName}"`);
+  await app.get(DataSource).query(`TRUNCATE ${tables.join(', ')} CASCADE`);
   return app;
 }
 

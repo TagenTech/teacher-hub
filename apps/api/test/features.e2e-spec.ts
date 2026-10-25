@@ -7,12 +7,14 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { addDays, todayIn, weekdayOf, type PushPayload } from '@turmei/contracts';
 import { DataSource } from 'typeorm';
+import { Lesson } from '../src/agenda/entities/lesson.entity';
 import { SlotsService } from '../src/agenda/slots.service';
+import { Charge } from '../src/financeiro/entities/charge.entity';
 import { BillingService } from '../src/financeiro/billing.service';
 import { PushService } from '../src/lembretes/push.service';
 import { RemindersService } from '../src/lembretes/reminders.service';
 import { TeachersService } from '../src/professor/teachers.service';
-import { createTestApp } from './helpers';
+import { createTestApp, quotedTable } from './helpers';
 
 describe('Funcionalidades (e2e)', () => {
   let app: INestApplication;
@@ -380,7 +382,8 @@ describe('Funcionalidades (e2e)', () => {
       expect(before).toBeGreaterThanOrEqual(8);
 
       // Simula o tempo passando: some a agenda futura e o cron da madrugada gera de novo.
-      await app.get(DataSource).query(`DELETE FROM lessons WHERE student_id = $1 AND status = 'AGENDADA'`, [jo]);
+      const db = app.get(DataSource);
+      await db.query(`DELETE FROM ${quotedTable(db, Lesson)} WHERE student_id = $1 AND status = 'AGENDADA'`, [jo]);
       expect(await count()).toBe(0);
       await app.get(SlotsService).generateAll();
       expect(await count()).toBe(before);
@@ -390,10 +393,12 @@ describe('Funcionalidades (e2e)', () => {
 
     it('4h: gera a mensalidade do plano mensal uma vez só', async () => {
       const kai = await newStudent('Kai Mensal', { type: 'MENSAL', monthlyFeeCents: 25000, dueDay: 15 }, { startDate: today });
-      await app.get(DataSource).query(`DELETE FROM charges WHERE student_id = $1`, [kai]);
+      const db = app.get(DataSource);
+      const charges = quotedTable(db, Charge);
+      await db.query(`DELETE FROM ${charges} WHERE student_id = $1`, [kai]);
       // Direto no banco: abrir a lista de cobranças também dispara a geração.
       const list = async () =>
-        (await app.get(DataSource).query(`SELECT kind, amount_cents, description FROM charges WHERE student_id = $1`, [kai])) as {
+        (await db.query(`SELECT kind, amount_cents, description FROM ${charges} WHERE student_id = $1`, [kai])) as {
           kind: string;
           amount_cents: number;
           description: string;

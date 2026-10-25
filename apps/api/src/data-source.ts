@@ -7,11 +7,9 @@ import 'dotenv/config';
 import 'reflect-metadata';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
+import { getDatabaseOptions } from './database/db-options';
 
 export default new DataSource({
-  type: 'postgres',
-  url: process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/gestao_aulas',
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  ...getDatabaseOptions(process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/gestao_aulas'),
   entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-  migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
 });

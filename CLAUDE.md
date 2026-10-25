@@ -14,6 +14,7 @@ Monorepo pnpm + Turbo. Leia o [README](README.md) e o [docs/PLANO.md](docs/PLANO
 - Cobrança da licença ainda não existe — o plano está em `docs/MONETIZACAO.md`.
 - Módulos da API se falam por eventos (`src/common/events.ts`, `@nestjs/event-emitter`) para evitar dependência circular.
 - Dev usa `synchronize`; produção usa migrations (`src/migrations`). Mudou entidade → gere migration.
+- Migrations que criam tabelas devem chamar `lockdownSupabaseTables(queryRunner)` (`src/database/supabase-lockdown.ts`).
 
 ## Segurança (ver docs/SEGURANCA.md)
 - Sem `NODE_ENV` a API assume **produção** (sem Swagger/rotas de dev). Dev usa `NODE_ENV=development` no `.env`.

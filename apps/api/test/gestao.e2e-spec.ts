@@ -8,10 +8,13 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { DataSource } from 'typeorm';
 import { addDays, monthOf, todayIn, weekdayOf, zonedParts } from '@turmei/contracts';
+import { Lesson } from '../src/agenda/entities/lesson.entity';
+import { Student } from '../src/alunos/entities/student.entity';
 import { StudentsService } from '../src/alunos/students.service';
 import { RemindersService } from '../src/lembretes/reminders.service';
+import { SecurityEvent } from '../src/security/entities/security-event.entity';
 import { SecurityEventsService } from '../src/security/security-events.service';
-import { createTestApp, registerTeacher } from './helpers';
+import { createTestApp, quotedTable, registerTeacher } from './helpers';
 
 const TZ = 'America/Sao_Paulo';
 
@@ -203,7 +206,8 @@ describe('Gestão (e2e)', () => {
       await newLesson(s.id, daysAgo(1));
       await http.delete(`/v1/students/${s.id}`).set(auth).expect(204);
       await http.get(`/v1/students/${s.id}`).set(auth).expect(404);
-      const [{ n }] = await app.get(DataSource).query('SELECT count(*)::int AS n FROM lessons WHERE student_id = $1', [s.id]);
+      const db = app.get(DataSource);
+      const [{ n }] = await db.query(`SELECT count(*)::int AS n FROM ${quotedTable(db, Lesson)} WHERE student_id = $1`, [s.id]);
       expect(n).toBe(0);
     });
 
@@ -248,7 +252,11 @@ describe('Gestão (e2e)', () => {
       expect(during.length).toBeLessThan(all.length);
 
       // O tempo passa: a data de volta fica para trás e o cron de hora em hora reativa.
-      await app.get(DataSource).query('UPDATE students SET paused_until = $2 WHERE id = $1', [s.id, addDays(today, -1)]);
+      const db = app.get(DataSource);
+      await db.query(`UPDATE ${quotedTable(db, Student)} SET paused_until = $2 WHERE id = $1`, [
+        s.id,
+        addDays(today, -1),
+      ]);
       await app.get(StudentsService).resumeExpiredPauses();
       const back = (await http.get(`/v1/students/${s.id}`).set(auth).expect(200)).body;
       expect(back).toMatchObject({ status: 'ATIVO', pausedUntil: null });
@@ -411,8 +419,12 @@ describe('Gestão (e2e)', () => {
     it('rotinas: o cron de lembretes roda para todos sem erro e a auditoria apaga o que passou de 1 ano', async () => {
       await expect(app.get(RemindersService).tick(new Date('2031-06-01T15:00:00Z'))).resolves.toBeUndefined();
       const db = app.get(DataSource);
-      await db.query(`INSERT INTO security_events (type, created_at) VALUES ('LOGIN_OK', now() - interval '400 days'), ('LOGIN_OK', now())`);
-      const count = async () => (await db.query(`SELECT count(*)::int AS n FROM security_events WHERE type = 'LOGIN_OK' AND teacher_id IS NULL`))[0].n;
+      const securityEvents = quotedTable(db, SecurityEvent);
+      await db.query(
+        `INSERT INTO ${securityEvents} (type, created_at) VALUES ('LOGIN_OK', now() - interval '400 days'), ('LOGIN_OK', now())`,
+      );
+      const count = async () =>
+        (await db.query(`SELECT count(*)::int AS n FROM ${securityEvents} WHERE type = 'LOGIN_OK' AND teacher_id IS NULL`))[0].n;
       expect(await count()).toBe(2);
       await app.get(SecurityEventsService).prune();
       expect(await count()).toBe(1);
