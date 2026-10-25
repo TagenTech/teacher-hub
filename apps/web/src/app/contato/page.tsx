@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ApiError } from '@/lib/api/client';
 import { sendContact } from '@/lib/api/contact';
+import { useAuth } from '@/lib/auth';
 
 const schema = z.object({
   name: z.string().trim().min(2, 'Como podemos te chamar?').max(120),
@@ -22,13 +23,23 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function ContatoPage() {
+  const { teacher } = useAuth();
   const [sent, setSent] = React.useState(false);
   const [formError, setFormError] = React.useState<string | null>(null);
   const {
     register,
     handleSubmit,
+    getValues,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
+
+  // Preenche nome/e-mail de quem já está logado, sem sobrescrever o que a pessoa digitou.
+  React.useEffect(() => {
+    if (!teacher) return;
+    if (!getValues('name')) setValue('name', teacher.name);
+    if (!getValues('email')) setValue('email', teacher.email);
+  }, [teacher, getValues, setValue]);
 
   const onSubmit = handleSubmit(async (v) => {
     setFormError(null);
