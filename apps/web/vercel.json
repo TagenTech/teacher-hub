@@ -1,4 +1,5 @@
 {
   "regions": ["gru1"],
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
   "buildCommand": "cd ../.. && pnpm turbo run build --filter=@turmei/web"
 }

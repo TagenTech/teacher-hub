@@ -1,6 +1,7 @@
 {
   "regions": ["gru1"],
   "framework": null,
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
   "buildCommand": "cd ../.. && pnpm turbo run build --filter=@turmei/api && mkdir -p apps/api/public",
   "outputDirectory": "public",
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
