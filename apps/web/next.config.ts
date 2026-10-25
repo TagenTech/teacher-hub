@@ -14,7 +14,7 @@ const SECURITY_HEADERS = [
 ];
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: process.env.VERCEL ? undefined : 'standalone',
   // Testes de navegador compilam numa pasta própria (não atrapalha o `next dev`).
   distDir: process.env.NEXT_DIST_DIR || '.next',
   poweredByHeader: false,
