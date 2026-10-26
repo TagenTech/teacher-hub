@@ -448,6 +448,13 @@ describe('Gestão (e2e)', () => {
       expect(brIntl.body.phone).toBe('11987654321');
     });
 
+    it('número colado de contatos/WhatsApp (0 na frente, +55, marcas invisíveis) é aceito', async () => {
+      for (const pasted of ['011 98765-4321', '+55 11 98765-4321', '55 11 98765-4321', '\u202a+55 11 98765-4321\u202c', '11\u00a098765-4321']) {
+        expect((await create(pasted).expect(201)).body.phone).toBe('11987654321');
+      }
+      expect((await create('\u202a+44 7911 123456\u202c').expect(201)).body.phone).toBe('+447911123456');
+    });
+
     it('recusa número curto, longo demais ou malformado', async () => {
       // (Sem "+", um número como 4155552671 é lido como fixo de Curitiba — por isso o app pede o "+".)
       for (const phone of ['+1415', '+0123456789', '+1234567890123456', '+55 11 999', '123', 'abc']) {
