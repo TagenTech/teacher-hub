@@ -430,4 +430,51 @@ describe('Gestão (e2e)', () => {
       expect(await count()).toBe(1);
     });
   });
+
+  describe('telefones', () => {
+    const plan = { type: 'POR_AULA', lessonPriceCents: 8000, dueDay: 10 };
+    const create = (phone: string, extra: Record<string, unknown> = {}) =>
+      http.post('/v1/students').set(auth).send({ name: 'Aluno Telefone', phone, plan, ...extra });
+
+    it('aceita número de outro país (guarda E.164) e mantém o Brasil só com dígitos', async () => {
+      const us = await create('+1 (415) 555-2671').expect(201);
+      expect(us.body.phone).toBe('+14155552671');
+      const uk = await create('00 44 7911 123456').expect(201);
+      expect(uk.body.phone).toBe('+447911123456');
+      const br = await create('(11) 98765-4321').expect(201);
+      expect(br.body.phone).toBe('11987654321');
+      // +55 completo é Brasil: perde o "+55".
+      const brIntl = await create('+55 (11) 98765-4321').expect(201);
+      expect(brIntl.body.phone).toBe('11987654321');
+    });
+
+    it('recusa número curto, longo demais ou malformado', async () => {
+      // (Sem "+", um número como 4155552671 é lido como fixo de Curitiba — por isso o app pede o "+".)
+      for (const phone of ['+1415', '+0123456789', '+1234567890123456', '+55 11 999', '123', 'abc']) {
+        const res = await create(phone).expect(400);
+        expect(JSON.stringify(res.body)).toContain('Telefone inválido');
+      }
+    });
+
+    it('responsável e professor também aceitam número internacional', async () => {
+      const s = await create('11987654321', { guardianName: 'Mr. Smith', guardianPhone: '+44 7911 123456', payerIsGuardian: true }).expect(201);
+      expect(s.body.guardianPhone).toBe('+447911123456');
+      const edited = await http.patch(`/v1/students/${s.body.id}`).set(auth).send({ phone: '+351 912 345 678' }).expect(200);
+      expect(edited.body.phone).toBe('+351912345678');
+      const prof = await http.patch('/v1/me/profile').set(auth).send({ name: 'Prof Gestão', cpf: '529.982.247-25', phone: '+1 415 555 2671' }).expect(200);
+      expect(prof.body.phone).toBe('+14155552671');
+    });
+
+    it('WhatsApp da cobrança usa o DDI do aluno (sem forçar 55)', async () => {
+      const s = await create('+1 415 555 2671', { name: 'Zap Internacional' }).expect(201);
+      const ch = await http
+        .post('/v1/charges')
+        .set(auth)
+        .send({ studentId: s.body.id, description: 'Aula online', amountCents: 8000, dueDate: addDays(today, 3) })
+        .expect(201);
+      const msg = await http.get(`/v1/charges/${ch.body.id}/whatsapp`).set(auth).expect(200);
+      expect(msg.body.phone).toBe('+14155552671');
+      expect(msg.body.url).toMatch(/^https:\/\/wa\.me\/14155552671\?text=/);
+    });
+  });
 });

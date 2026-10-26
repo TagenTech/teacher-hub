@@ -11,6 +11,7 @@ Monorepo pnpm + Turbo. Leia o [README](README.md) e o [docs/PLANO.md](docs/PLANO
 - Autenticação: e-mail/senha + Google/Microsoft/Meta (OAuth no servidor, `src/auth/oauth.service.ts`). Ver `docs/AUTENTICACAO.md`.
   Em dev sem `RESEND_API_KEY`, links de e-mail ficam em `GET /v1/dev/outbox`.
 - CPF é dado pessoal: cifrado no banco (AES-256-GCM), nunca volta inteiro para o navegador (`cpfMasked`).
+- Telefone: Brasil só com dígitos (DDD + número, sem 55); outros países em E.164 com "+" (`+14155552671`). Sempre via `normalizePhone`/`isValidPhone`/`whatsappLink`/`dialNumber` (`packages/contracts/src/phone.ts`) — nunca monte `wa.me/55…` ou `tel:+55…` à mão. Colunas `varchar(16)`.
 - Cobrança da licença ainda não existe — o plano está em `docs/MONETIZACAO.md`.
 - Módulos da API se falam por eventos (`src/common/events.ts`, `@nestjs/event-emitter`) para evitar dependência circular.
 - Dev usa `synchronize`; produção usa migrations (`src/migrations`). Mudou entidade → gere migration.

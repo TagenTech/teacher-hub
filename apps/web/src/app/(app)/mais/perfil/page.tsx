@@ -35,7 +35,7 @@ export default function PerfilPage() {
     const e: Record<string, string> = {};
     if (!/\S+\s+\S+/.test(name.trim())) e.name = 'Informe nome e sobrenome';
     if (editingCpf && !isValidCpf(cpf)) e.cpf = 'CPF inválido — confira os números';
-    if (!isValidPhone(phone)) e.phone = 'Celular inválido — use DDD + número';
+    if (!isValidPhone(phone)) e.phone = 'Celular inválido — use DDD + número, ou + e o código do país';
     setErrors(e);
     if (Object.keys(e).length) {
       haptic([30, 40, 30]);
@@ -95,7 +95,7 @@ export default function PerfilPage() {
               invalid={!!errors.cpf}
             />
           </Field>
-          <Field label="Celular (WhatsApp)" htmlFor="pf-phone" error={errors.phone}>
+          <Field label="Celular (WhatsApp)" htmlFor="pf-phone" hint="Fora do Brasil? Comece com + e o código do país" error={errors.phone}>
             <PhoneInput id="pf-phone" icon={<Phone />} value={phone} onChange={setPhone} invalid={!!errors.phone} />
           </Field>
           <div className="grid grid-cols-[minmax(0,1fr)_5.5rem] gap-3">

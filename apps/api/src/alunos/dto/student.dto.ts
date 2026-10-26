@@ -21,7 +21,7 @@ import {
   type StudentColor,
   type StudentFields,
 } from '@turmei/contracts';
-import { EmptyToNull, IsBrPhone, IsIsoDate } from '../../common/validators/br.validators';
+import { EmptyToNull, IsPhone, IsIsoDate } from '../../common/validators/br.validators';
 import { BillingPlanInputDto } from './billing-plan.dto';
 
 const trim = () => Transform(({ value }) => (typeof value === 'string' ? value.trim() : value));
@@ -44,7 +44,7 @@ export class StudentFieldsDto implements StudentFields {
 
   @ApiPropertyOptional({ example: '(11) 98765-4321' })
   @IsOptional()
-  @IsBrPhone()
+  @IsPhone()
   phone?: string | null;
 
   @ApiPropertyOptional()
@@ -71,7 +71,7 @@ export class StudentFieldsDto implements StudentFields {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsBrPhone({ message: 'Telefone do responsável inválido' })
+  @IsPhone({ message: 'Telefone do responsável inválido' })
   guardianPhone?: string | null;
 
   @ApiPropertyOptional()

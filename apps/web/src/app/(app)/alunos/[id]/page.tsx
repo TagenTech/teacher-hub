@@ -6,6 +6,7 @@ import {
   displayName,
   formatDateLong,
   formatDateShort,
+  dialNumber,
   formatPhone,
   StudentStatus,
   whatsappLink,
@@ -299,7 +300,7 @@ export default function AlunoPage() {
             disabled={!contactPhone}
           >
             {contactPhone ? (
-              <a href={`tel:+55${contactPhone}`}>
+              <a href={`tel:${dialNumber(contactPhone)}`}>
                 <Phone /> <span className="text-xs">Ligar</span>
               </a>
             ) : (

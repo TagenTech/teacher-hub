@@ -3,6 +3,7 @@ import {
   DEFAULT_LESSON_REMINDER_MINUTES,
   DEFAULT_PAYMENT_REMINDER_HOUR,
   DEFAULT_TIMEZONE,
+  PHONE_MAX_LENGTH,
   PixKeyType,
 } from '@turmei/contracts';
 
@@ -36,7 +37,7 @@ export class Teacher {
   @Column({ name: 'cpf_masked', type: 'varchar', length: 14, nullable: true })
   cpfMasked: string | null;
 
-  @Column({ type: 'varchar', length: 11, nullable: true })
+  @Column({ type: 'varchar', length: PHONE_MAX_LENGTH, nullable: true })
   phone: string | null;
 
   @Column({ type: 'varchar', length: 80, nullable: true })

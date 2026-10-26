@@ -43,7 +43,7 @@ export function IdentityFields() {
       <Field label="Como você chama" htmlFor="nickname" hint="Opcional — aparece na agenda" error={errors.nickname?.message}>
         <Input id="nickname" autoComplete="off" placeholder="Aninha" {...register('nickname')} />
       </Field>
-      <Field label="WhatsApp" htmlFor="phone" error={errors.phone?.message}>
+      <Field label="WhatsApp" htmlFor="phone" hint="Fora do Brasil? Comece com + e o código do país" error={errors.phone?.message}>
         <Controller
           control={control}
           name="phone"
@@ -198,7 +198,7 @@ export function GuardianFields() {
               {...register('guardianName')}
             />
           </Field>
-          <Field label="WhatsApp do responsável" htmlFor="guardianPhone" error={errors.guardianPhone?.message}>
+          <Field label="WhatsApp do responsável" htmlFor="guardianPhone" hint="Fora do Brasil? Comece com + e o código do país" error={errors.guardianPhone?.message}>
             <Controller
               control={control}
               name="guardianPhone"

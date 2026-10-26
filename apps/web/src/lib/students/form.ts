@@ -19,7 +19,7 @@ const optionalPhone = (message: string) =>
 export const studentShape = {
   name: z.string().trim().min(1, 'Informe o nome do aluno').max(STUDENT_LIMITS.name),
   nickname: z.string().trim().max(STUDENT_LIMITS.nickname),
-  phone: optionalPhone('Telefone inválido — use DDD + número'),
+  phone: optionalPhone('Telefone inválido — use DDD + número, ou + e o código do país'),
   email: z
     .string()
     .trim()
@@ -28,7 +28,7 @@ export const studentShape = {
   birthDate: z.string().refine((v) => !v || isIsoDate(v), 'Data inválida'),
   hasGuardian: z.boolean(),
   guardianName: z.string().trim().max(STUDENT_LIMITS.name),
-  guardianPhone: optionalPhone('Telefone do responsável inválido'),
+  guardianPhone: optionalPhone('Telefone do responsável inválido — use DDD + número, ou + e o código do país'),
   payerIsGuardian: z.boolean(),
   color: z.enum(STUDENT_COLORS),
   emoji: z.string().nullable(),
