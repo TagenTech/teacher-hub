@@ -14,6 +14,9 @@ export const financeKeys = {
 
 export const useCharges = (p: { month?: string; studentId?: string; status?: ChargeFilter }, enabled = true) =>
   useQuery({ queryKey: financeKeys.charges(p), queryFn: () => financeApi.charges(p), enabled, placeholderData: (prev) => prev });
+/** Mensagem de cobrança pronta (texto + link do WhatsApp). Fica sob 'charges' para ser invalidada junto com a cobrança. */
+export const useWhatsappMessage = (chargeId: string) =>
+  useQuery({ queryKey: ['charges', 'whatsapp', chargeId] as const, queryFn: () => financeApi.whatsapp(chargeId), staleTime: 60_000 });
 export function useCharge(id: string | null) {
   const qc = useQueryClient();
   return useQuery({

@@ -1,41 +1,44 @@
 'use client';
 
 import { Copy, MessageCircle } from 'lucide-react';
-import * as React from 'react';
 import { toast } from 'sonner';
 import { Button, type ButtonProps } from '@/components/ui/button';
 import { financeApi } from '@/lib/api/finance';
-import { ApiError } from '@/lib/api/client';
+import { useWhatsappMessage } from '@/lib/queries/finance';
+import { useHydrated } from '@/lib/use-hydrated';
 
-/** Busca a mensagem pronta e abre o WhatsApp; sem telefone, copia o texto. */
+/**
+ * Mensagem de cobrança pronta no WhatsApp. A mensagem é buscada antes do toque, então o botão já é um
+ * link de verdade: nada de abrir uma aba em branco para só depois preencher (ela ficava sobrando ao voltar).
+ * No celular o link abre na mesma aba (o sistema entrega para o app do WhatsApp e esta tela continua aqui);
+ * no computador abre uma aba nova, sem acesso à nossa (noopener). Sem telefone, copia o texto.
+ */
 export function WhatsappChargeButton({ chargeId, label = 'Cobrar no WhatsApp', ...props }: { chargeId: string; label?: string } & ButtonProps) {
-  const [loading, setLoading] = React.useState(false);
+  const { data: msg, isError, refetch } = useWhatsappMessage(chargeId);
+  const touch = useHydrated() && window.matchMedia('(pointer: coarse)').matches;
+
+  if (msg?.url) {
+    return (
+      <Button {...props} asChild>
+        <a href={msg.url} target={touch ? '_self' : '_blank'} rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+          <MessageCircle /> {label}
+        </a>
+      </Button>
+    );
+  }
   return (
     <Button
       {...props}
-      loading={loading}
+      loading={!msg && !isError}
       onClick={async (e) => {
         e.stopPropagation();
-        // Abre a janela já no clique (iOS bloqueia janelas abertas depois de um await).
-        const win = typeof window !== 'undefined' ? window.open('', '_blank') : null;
-        // A aba nova não pode controlar a nossa (reverse tabnabbing).
-        if (win) win.opener = null;
-        setLoading(true);
-        try {
-          const msg = await financeApi.whatsapp(chargeId);
-          if (msg.url && win) {
-            win.location.href = msg.url;
-          } else {
-            win?.close();
-            await navigator.clipboard?.writeText(msg.text).catch(() => undefined);
-            toast(msg.url ? 'Mensagem copiada' : `${msg.recipientName} não tem telefone — mensagem copiada 📋`);
-          }
-        } catch (err) {
-          win?.close();
-          toast.error(err instanceof ApiError ? err.message : 'Não foi possível montar a mensagem');
-        } finally {
-          setLoading(false);
+        const m = msg ?? (await refetch()).data;
+        if (!m) {
+          toast.error('Não foi possível montar a mensagem');
+          return;
         }
+        await navigator.clipboard?.writeText(m.text).catch(() => undefined);
+        toast(m.url ? 'Mensagem copiada' : `${m.recipientName} não tem telefone — mensagem copiada 📋`);
       }}
     >
       <MessageCircle /> {label}

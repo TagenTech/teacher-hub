@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { devices, expect, test, type Page } from '@playwright/test';
 
 /**
  * Os fluxos principais no celular, como a professora usa:
@@ -87,6 +87,19 @@ test('número com formato errado mostra o aviso e não cadastra', async () => {
   await expect(page.getByText('Passo 1 de 3')).toBeVisible();
 });
 
+test('número colado (contatos, WhatsApp, com 0, +55 ou marcas invisíveis) é aceito de primeira', async () => {
+  const pasted = ['+55 (11) 98765-4321', '55 11 98765-4321', '011 98765-4321', '\u202a+55 11 98765-4321\u202c', '11\u00a098765-4321'];
+  for (const value of pasted) {
+    await page.goto('/alunos/novo');
+    await page.getByLabel('Nome completo').fill('Colou Número');
+    const phone = page.getByLabel('WhatsApp', { exact: true });
+    await phone.fill(value);
+    await expect(phone).toHaveValue('(11) 98765-4321');
+    await page.getByRole('button', { name: 'Continuar' }).click();
+    await expect(page.getByText('Passo 2 de 3')).toBeVisible();
+  }
+});
+
 test('agenda uma aula para hoje e marca como realizada', async () => {
   await page.goto('/hoje');
   await page.getByRole('button', { name: 'Ações rápidas' }).click();
@@ -108,6 +121,33 @@ test('agenda uma aula para hoje e marca como realizada', async () => {
   await lessonCard().click();
   await expect(page.getByRole('button', { name: /Desfazer marcação/ })).toBeVisible();
   await page.keyboard.press('Escape');
+});
+
+test('cobrar no WhatsApp é um link direto, sem aba em branco sobrando', async ({ browser }) => {
+  const origin = new URL(page.url()).origin;
+  await page.goto('/financeiro');
+  await page.getByRole('button', { name: new RegExp(ALUNA) }).first().click();
+  const wa = page.getByRole('link', { name: 'WhatsApp' });
+  await expect(wa).toHaveAttribute('href', /^https:\/\/wa\.me\/5511987654321\?text=/);
+  await expect(wa).toHaveAttribute('rel', /noopener/);
+  // Celular: abre na mesma aba — o sistema entrega ao app do WhatsApp e esta tela continua aqui.
+  await expect(wa).toHaveAttribute('target', '_self');
+
+  // Computador: aba nova, sem acesso à nossa.
+  const desktop = await browser.newContext({ ...devices['Desktop Chrome'], baseURL: origin, locale: 'pt-BR' });
+  await desktop.request.post(`${origin}/api/v1/auth/login`, { data: { email: PROFESSORA.email, password: PROFESSORA.password } });
+  const dp = await desktop.newPage();
+  await dp.goto('/financeiro');
+  await dp.getByRole('button', { name: new RegExp(ALUNA) }).first().click();
+  await expect(dp.getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('target', '_blank');
+  await desktop.close();
+
+  // Tocar não cria nenhuma aba extra (antes abria uma em branco e depois a preenchia).
+  await page.route('https://wa.me/**', (route) => route.fulfill({ status: 200, contentType: 'text/html', body: 'WhatsApp' }));
+  await wa.click();
+  await expect(page).toHaveURL(/^https:\/\/wa\.me\/5511987654321/);
+  expect(page.context().pages()).toHaveLength(1);
+  await page.unroute('https://wa.me/**');
 });
 
 test('recebe o pagamento da mensalidade no financeiro', async () => {

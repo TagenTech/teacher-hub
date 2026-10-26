@@ -12,8 +12,11 @@ export function isInternationalPhone(value: string): boolean {
   return value.startsWith('+');
 }
 
+/** Espaço sem quebra e marcas de direção de texto que contatos/WhatsApp colocam ao copiar um número. */
+const INVISIBLE = /[\u00a0\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g;
+
 export function normalizePhone(input: string): string {
-  const raw = input.trim();
+  const raw = input.replace(INVISIBLE, ' ').trim();
   let digits = raw.replace(/\D/g, '');
   // "00" é o prefixo internacional de discagem (nenhum DDD brasileiro começa com 0).
   const dialedOut = raw.startsWith('00');
@@ -23,6 +26,8 @@ export function normalizePhone(input: string): string {
     if (digits.startsWith('55') && digits.length >= 12) return digits.slice(2);
     return `+${digits}`;
   }
+  // Zero na frente é o "0" de discagem interurbana ("011 98765-4321"): DDD brasileiro não começa com 0.
+  digits = digits.replace(/^0+/, '');
   if (digits.length > 11 && digits.startsWith('55')) digits = digits.slice(2);
   return digits;
 }

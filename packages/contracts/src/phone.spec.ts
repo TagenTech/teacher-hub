@@ -66,4 +66,41 @@ describe('phone', () => {
       expect(whatsappLink('+447911123456', 'Hi!')).toBe('https://wa.me/447911123456?text=Hi!');
     });
   });
+
+  describe('número colado de contatos, WhatsApp e sites', () => {
+    const br = '11987654321';
+    it.each([
+      ['(11) 98765-4321'],
+      ['11 98765-4321'],
+      ['11-98765-4321'],
+      ['11.98765.4321'],
+      ['11 9 8765-4321'],
+      ['+55 (11) 98765-4321'],
+      ['+55 11 98765-4321'],
+      ['+5511987654321'],
+      ['5511987654321'],
+      ['55 11 98765-4321'],
+      ['0055 11 98765-4321'],
+      ['011 98765-4321'],
+      ['(011) 98765-4321'],
+      ['0 11 98765-4321'],
+      ['  11 98765-4321  '],
+      ['11\u00a098765-4321'], // espaço sem quebra
+      ['\u202a+55 11 98765-4321\u202c'], // marcas de direção que o iPhone/WhatsApp colocam
+      ['\u200e(11) 98765-4321'],
+      ['tel: 11 98765-4321'],
+    ])('"%s" vira o número brasileiro', (pasted) => {
+      expect(normalizePhone(pasted)).toBe(br);
+      expect(isValidPhone(normalizePhone(pasted))).toBe(true);
+    });
+    it('fixo colado também vale', () => {
+      expect(normalizePhone('(11) 3333-4444')).toBe('1133334444');
+      expect(normalizePhone('+55 11 3333-4444')).toBe('1133334444');
+      expect(normalizePhone('011 3333-4444')).toBe('1133334444');
+    });
+    it('internacional colado com marcas invisíveis continua internacional', () => {
+      expect(normalizePhone('\u202a+44 7911 123456\u202c')).toBe('+447911123456');
+      expect(normalizePhone('+44\u00a07911\u00a0123456')).toBe('+447911123456');
+    });
+  });
 });
