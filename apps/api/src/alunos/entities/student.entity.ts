@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { StudentStatus, type StudentColor } from '@turmei/contracts';
+import { PHONE_MAX_LENGTH, StudentStatus, type StudentColor } from '@turmei/contracts';
 import { BillingPlan } from './billing-plan.entity';
 
 @Entity('students')
@@ -25,7 +25,7 @@ export class Student {
   @Column({ type: 'varchar', length: 40, nullable: true })
   nickname: string | null;
 
-  @Column({ type: 'varchar', length: 11, nullable: true })
+  @Column({ type: 'varchar', length: PHONE_MAX_LENGTH, nullable: true })
   phone: string | null;
 
   @Column({ type: 'varchar', length: 180, nullable: true })
@@ -37,7 +37,7 @@ export class Student {
   @Column({ name: 'guardian_name', type: 'varchar', length: 120, nullable: true })
   guardianName: string | null;
 
-  @Column({ name: 'guardian_phone', type: 'varchar', length: 11, nullable: true })
+  @Column({ name: 'guardian_phone', type: 'varchar', length: PHONE_MAX_LENGTH, nullable: true })
   guardianPhone: string | null;
 
   @Column({ name: 'payer_is_guardian', default: false })

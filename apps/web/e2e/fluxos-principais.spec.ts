@@ -59,6 +59,34 @@ test('cadastra uma aluna com plano mensal', async () => {
   await expect(page.getByText(ALUNA)).toBeVisible();
 });
 
+test('aluno de outro país: WhatsApp com + e código do país', async () => {
+  await page.goto('/alunos/novo');
+  await page.getByLabel('Nome completo').fill('Emma Online');
+  const phone = page.getByLabel('WhatsApp', { exact: true });
+  await phone.fill('+44 7911 123456');
+  await expect(phone).toHaveValue('+44 791 112 3456');
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await page.getByRole('radiogroup', { name: 'Tipo de cobrança' }).getByRole('radio', { name: /Por aula/ }).click();
+  await page.getByLabel('Valor de cada aula').fill('90,00');
+  await page.getByRole('radio', { name: 'Dia 10' }).click();
+  await page.getByRole('button', { name: 'Cadastrar aluno' }).click();
+
+  await expect(page).toHaveURL(/\/alunos\/[0-9a-f-]{36}$/);
+  await expect(page.getByRole('heading', { name: 'Emma Online' })).toBeVisible();
+  await expect(page.getByText('+44 791 112 3456')).toBeVisible();
+  await expect(page.locator('a[href="https://wa.me/447911123456"]').first()).toBeVisible();
+});
+
+test('número com formato errado mostra o aviso e não cadastra', async () => {
+  await page.goto('/alunos/novo');
+  await page.getByLabel('Nome completo').fill('Teste Inválido');
+  await page.getByLabel('WhatsApp', { exact: true }).fill('+1415');
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await expect(page.getByText(/ou \+ e o código do país/)).toBeVisible();
+  await expect(page.getByText('Passo 1 de 3')).toBeVisible();
+});
+
 test('agenda uma aula para hoje e marca como realizada', async () => {
   await page.goto('/hoje');
   await page.getByRole('button', { name: 'Ações rápidas' }).click();
