@@ -31,6 +31,7 @@ test('cria a conta e entra direto no app', async () => {
   await page.getByLabel('Seu nome').fill(PROFESSORA.name);
   await page.getByLabel('E-mail').fill(PROFESSORA.email);
   await page.getByLabel('Senha', { exact: true }).fill(PROFESSORA.password);
+  await page.getByLabel('Confirmar senha').fill(PROFESSORA.password);
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Criar minha conta' }).click();
 
