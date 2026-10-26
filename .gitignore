@@ -15,3 +15,5 @@ playwright-report/
 test-results/
 .claude/settings.local.json
 *.log
+# Saídas locais com dados pessoais (ex.: painel de usuários)
+.local/

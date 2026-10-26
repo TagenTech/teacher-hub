@@ -94,6 +94,65 @@ subscription_events   -- auditoria e idempotência dos webhooks
 
 ### Métricas
 Conversão cadastro → teste → pago, churn mensal, MRR, motivos de cancelamento (perguntar no fluxo de cancelar).
+O acompanhamento fica no painel de admin descrito em [Painel financeiro das licenças](#painel-financeiro-das-licenças-admin--planejado).
+
+## Painel financeiro das licenças (admin) — planejado
+
+Status: **planejado — não implementado** (depende da cobrança da licença acima). Serve para o dono do Turmei
+acompanhar o **dinheiro do próprio Turmei**: assinaturas, receita recorrente, testes grátis e cancelamentos.
+
+### O que é (e o que nunca é)
+| Entra | Fica de fora, sempre |
+|---|---|
+| Pagamentos **das licenças** (professor → Turmei), vindos das tabelas `subscriptions` e `subscription_events` e do gateway | Cobranças e pagamentos que o professor faz **aos seus alunos** (tabelas `charges`/`payments`), valores, PIX do professor |
+| Estado da assinatura, datas e valor do plano | Número de cartão, CVV, `payload` bruto dos webhooks (só o gateway guarda dados de cartão) |
+
+Motivo: os recebimentos dos alunos são dados do professor e de terceiros; o Turmei é operador desses dados (LGPD) e
+**não tem finalidade legítima para olhá-los**. O painel atual de usuários já foi feito assim: nem consulta essas tabelas.
+
+### Onde vive
+Uma seção nova no **painel offline** (`scripts/painel-usuarios/`), com as mesmas garantias: gerado por script,
+**somente leitura**, **só banco local** (produção via cópia restaurada ou `--allow-remote` consciente),
+arquivo em `.local/` (ignorado pelo git). Ela lê apenas colunas escolhidas de `subscriptions` e
+`subscription_events` (**nunca** a coluna `payload`). Sem aplicação web de admin dentro do app: um painel de admin
+exposto em produção é superfície de ataque a mais; o offline não tem esse risco.
+
+### Indicadores
+| Indicador | Definição |
+|---|---|
+| **Assinaturas por estado** | contagem em `TRIALING`, `ACTIVE`, `PAST_DUE`, `CANCELED` (com acesso até o fim do período), `SUSPENDED` |
+| **MRR** | soma do valor mensal das assinaturas `ACTIVE` e `PAST_DUE`; plano anual entra como valor ÷ 12; cortesia/cupom de 100% entra com R$ 0; **trial não conta** até a 1ª cobrança aprovada |
+| **ARR** | MRR × 12 |
+| **ARPU** | MRR ÷ assinaturas pagantes |
+| **Funil de conversão** | cadastro → iniciou trial → 1ª cobrança aprovada, com % em cada etapa |
+| **Trials** | em andamento, terminam em 2 dias (alinha com o aviso D-2), convertidos e cancelados antes de cobrar, no mês |
+| **Churn de clientes** | assinaturas que passaram a `SUSPENDED`/cancelaram no mês ÷ pagantes no início do mês |
+| **Churn de receita** | MRR perdido no mês ÷ MRR do início do mês |
+| **Movimento do MRR** | novo + reativado − cancelado − contração (cupom/queda de plano), calculado a partir de `subscription_events` |
+| **Inadimplência** | assinaturas em `PAST_DUE`, valor em risco, tentativas restantes, recuperadas no mês |
+| **Retenção por coorte** | % de pagantes ainda ativos 1, 3, 6 e 12 meses depois do mês de início |
+| **Motivos de cancelamento** | contagem das respostas do fluxo de cancelar (campo já previsto em "Métricas") |
+
+### Na tabela de usuários
+Uma coluna **Assinatura** (selo do estado + data do fim do trial ou da próxima cobrança + valor do plano) e,
+na gaveta de detalhes, o histórico dos eventos da assinatura (início do teste, cobrança aprovada/recusada,
+cancelamento) **sem** dados de cartão. O filtro rápido ganha "Trial acabando", "Em atraso (licença)" e "Cancelaram".
+
+### Como construir (quando a cobrança existir)
+1. Criar `subscriptions` e `subscription_events` conforme a seção "Dados" acima (com valores em centavos).
+2. Estender `gerar.mjs` com consultas só de leitura nessas duas tabelas (colunas explícitas, nada de `SELECT *`)
+   e um bloco `license` no JSON do painel; a tela só mostra a seção se o bloco existir (painel antigo continua funcionando).
+3. Calcular o movimento do MRR a partir dos eventos idempotentes dos webhooks, não do estado atual (para ter histórico).
+4. **Conferir com o relatório do gateway** uma vez por mês: o MRR do painel precisa bater com a receita do gateway;
+   diferença grande indica webhook perdido.
+5. Testes: dados de exemplo (`--demo`) com assinaturas em todos os estados e um teste que garante que
+   o JSON gerado não contém `payload`, número de cartão nem nada de `charges`/`payments`.
+
+### Cuidados
+- Reembolsos e *chargebacks* reduzem a receita do mês: registrar como evento próprio.
+- Moeda sempre em centavos (como no resto do app); datas em `YYYY-MM-DD` no fuso do Brasil.
+- Quem usa a fase gratuita ou a cortesia aparece como `NONE`/R$ 0 e não entra no MRR.
+- O arquivo gerado tem dados pessoais e financeiros do Turmei: guardar em `.local/`, não anexar em chats nem e-mail.
 
 ## Checklist de lançamento
 - [ ] Gateway escolhido, conta PJ/MEI aprovada, webhooks configurados em produção

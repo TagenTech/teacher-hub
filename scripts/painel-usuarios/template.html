@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
+<title>Turmei · Painel de usuários</title>
+<style>
+  :root {
+    --bg: #f6f4fb; --card: #ffffff; --ink: #241f35; --muted: #6b6482; --line: #e6e1f1; --line-strong: #d4cde6;
+    --primary: #6c5ce0; --primary-soft: #ece9fd; --primary-ink: #4a3fb8; --pink: #d9558f;
+    --good: #17825a; --good-soft: #dcf5ea; --warn: #9a6410; --warn-soft: #fcefd3; --bad: #c2384d; --bad-soft: #fde3e7;
+    --bar: #6c5ce0; --bar-2: #b9b0f3; --grid: #ece8f6;
+    --shadow: 0 1px 2px rgba(36,31,53,.06), 0 10px 28px rgba(36,31,53,.07);
+    --radius: 16px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14111f; --card: #1e1a2e; --ink: #ede9fb; --muted: #a39cc0; --line: #2e2943; --line-strong: #3d3757;
+      --primary: #9a8cff; --primary-soft: #2b2650; --primary-ink: #cfc8ff; --pink: #ff86b8;
+      --good: #4cd6a0; --good-soft: #143a2c; --warn: #f2bf62; --warn-soft: #3b2f12; --bad: #ff8a9b; --bad-soft: #432029;
+      --bar: #9a8cff; --bar-2: #4a4280; --grid: #2a2540; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14111f; --card: #1e1a2e; --ink: #ede9fb; --muted: #a39cc0; --line: #2e2943; --line-strong: #3d3757;
+    --primary: #9a8cff; --primary-soft: #2b2650; --primary-ink: #cfc8ff; --pink: #ff86b8;
+    --good: #4cd6a0; --good-soft: #143a2c; --warn: #f2bf62; --warn-soft: #3b2f12; --bad: #ff8a9b; --bad-soft: #432029;
+    --bar: #9a8cff; --bar-2: #4a4280; --grid: #2a2540; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 20px 16px 64px; }
+  header.top { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  h1 { margin: 0; font-size: 26px; font-weight: 900; letter-spacing: -.02em; }
+  h1 small { display: block; font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-top: 2px; }
+  h2 { margin: 0 0 12px; font-size: 15px; font-weight: 800; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    border: 1px solid var(--line-strong); background: var(--card); border-radius: 12px; padding: 8px 14px; cursor: pointer; font-weight: 700;
+    min-height: 40px;
+  }
+  .btn:hover { background: var(--primary-soft); }
+  .btn:focus-visible, .chip:focus-visible, input:focus-visible, select:focus-visible, th button:focus-visible, tr[tabindex]:focus-visible {
+    outline: 3px solid var(--primary); outline-offset: 2px;
+  }
+  .banner { border-radius: 12px; padding: 10px 14px; font-size: 13.5px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start; }
+  .banner.demo { background: var(--warn-soft); color: var(--warn); font-weight: 700; }
+  .banner.info { background: var(--primary-soft); color: var(--primary-ink); }
+  .grid { display: grid; gap: 12px; }
+  .kpis { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); margin-bottom: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; }
+  .kpi .label { color: var(--muted); font-size: 12.5px; font-weight: 700; }
+  .kpi .value { font-size: 26px; font-weight: 900; letter-spacing: -.02em; line-height: 1.15; margin-top: 2px; }
+  .kpi .sub { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .charts { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-bottom: 16px; }
+  .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart .axis { fill: var(--muted); font-size: 10.5px; }
+  .chart .val { fill: var(--ink); font-size: 11px; font-weight: 800; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .funnel { display: grid; gap: 8px; }
+  .funnel .row { display: grid; grid-template-columns: 128px 1fr 78px; gap: 10px; align-items: center; font-size: 13px; }
+  .funnel .track { height: 14px; background: var(--grid); border-radius: 7px; overflow: hidden; }
+  .funnel .fill { height: 100%; background: var(--bar); border-radius: 7px; min-width: 2px; }
+  .funnel .n { text-align: right; font-weight: 800; }
+  .funnel .n small { color: var(--muted); font-weight: 500; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .search { flex: 1 1 260px; position: relative; }
+  .search input { width: 100%; padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--card); min-height: 42px; }
+  select { padding: 9px 12px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--card); min-height: 42px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .chip { border: 1px solid var(--line-strong); background: var(--card); border-radius: 999px; padding: 6px 12px; cursor: pointer; font-size: 13px; font-weight: 700; }
+  .chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .chip .c { opacity: .75; font-weight: 600; margin-left: 4px; }
+  .tablecard { padding: 0; overflow: hidden; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 980px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { font-size: 12px; color: var(--muted); font-weight: 800; white-space: nowrap; background: var(--card); position: sticky; top: 0; }
+  th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+  th[aria-sort="ascending"] button::after { content: "▲"; font-size: 9px; }
+  th[aria-sort="descending"] button::after { content: "▼"; font-size: 9px; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: var(--primary-soft); }
+  .who { display: flex; gap: 10px; align-items: center; min-width: 220px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 13px; flex: none; color: #fff; }
+  .who b { display: block; line-height: 1.2; }
+  .who span { color: var(--muted); font-size: 12.5px; word-break: break-all; }
+  .pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 800; margin: 1px 4px 1px 0; white-space: nowrap; }
+  .pill.good { background: var(--good-soft); color: var(--good); }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.bad { background: var(--bad-soft); color: var(--bad); }
+  .pill.neutral { background: var(--primary-soft); color: var(--primary-ink); }
+  .muted { color: var(--muted); }
+  .empty { padding: 36px 16px; text-align: center; color: var(--muted); }
+  .count { color: var(--muted); font-size: 13px; margin: 0 2px 8px; }
+  /* gaveta de detalhes */
+  .backdrop { position: fixed; inset: 0; background: rgba(20,16,35,.45); opacity: 0; pointer-events: none; transition: opacity .18s; z-index: 20; }
+  .backdrop.open { opacity: 1; pointer-events: auto; }
+  aside.drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 100vw); background: var(--bg); z-index: 21; overflow-y: auto;
+    transform: translateX(102%); transition: transform .22s ease; box-shadow: -12px 0 40px rgba(0,0,0,.25); padding: 18px 16px 40px;
+  }
+  aside.drawer.open { transform: none; }
+  .dhead { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+  .dhead .avatar { width: 48px; height: 48px; font-size: 17px; }
+  .dhead h3 { margin: 0; font-size: 19px; line-height: 1.2; }
+  .dhead .close { margin-left: auto; }
+  .section { margin-bottom: 14px; }
+  dl { display: grid; grid-template-columns: 130px 1fr; gap: 6px 12px; margin: 0; font-size: 14px; }
+  dt { color: var(--muted); }
+  dd { margin: 0; font-weight: 600; word-break: break-word; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; }
+  .stat b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 12px; color: var(--muted); }
+  ul.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  ul.timeline li { display: grid; grid-template-columns: 8px 1fr; gap: 10px; font-size: 13.5px; }
+  ul.timeline li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); margin-top: 6px; }
+  ul.timeline li.fail::before { background: var(--bad); }
+  ul.timeline small { color: var(--muted); display: block; }
+  footer { margin-top: 22px; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+  @media (max-width: 600px) { .funnel .row { grid-template-columns: 96px 1fr 70px; } dl { grid-template-columns: 110px 1fr; } }
+  @media print { .actions, .toolbar, .chips, aside.drawer, .backdrop { display: none !important; } body { background: #fff; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Turmei · Painel de usuários<small id="sub"></small></h1>
+    <div class="actions">
+      <button class="btn" id="csv" type="button">Exportar CSV</button>
+      <button class="btn" id="theme" type="button" aria-label="Alternar tema claro/escuro">Tema</button>
+    </div>
+  </header>
+  <div id="banners"></div>
+  <section class="grid kpis" id="kpis" aria-label="Indicadores"></section>
+  <section class="grid charts" aria-label="Gráficos">
+    <div class="card chart"><h2>Cadastros por mês</h2><div id="chSignups"></div></div>
+    <div class="card chart"><h2>Logins por dia (30 dias)</h2><div id="chLogins"></div></div>
+    <div class="card chart"><h2>Funil de ativação</h2><div class="funnel" id="funnel"></div></div>
+    <div class="card chart"><h2>Como entram</h2><div id="chMethods"></div></div>
+  </section>
+
+  <section aria-label="Usuários">
+    <div class="toolbar">
+      <div class="search"><input id="q" type="search" placeholder="Buscar por nome, e-mail, cidade ou telefone…" aria-label="Buscar usuários"></div>
+      <select id="provider" aria-label="Método de entrada"></select>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Filtros rápidos"></div>
+    <p class="count" id="count" aria-live="polite"></p>
+    <div class="card tablecard"><div class="scroll"><table id="table"></table></div></div>
+  </section>
+
+  <footer>
+    <p><b>O que aparece aqui:</b> dados de cadastro, método de entrada, atividade (logins e sessões), uso (quantidade de alunos e de aulas) de cada professor.
+    <b>O que nunca aparece:</b> dados financeiros (cobranças, pagamentos, valores, PIX — o painel nem consulta essas tabelas), senhas, tokens, segredos de 2FA e CPF completo (só mascarado). IPs saem mascarados.</p>
+    <p>Arquivo gerado por <code>scripts/painel-usuarios/gerar.mjs</code> em modo somente leitura. Contém dados pessoais — não publique nem envie para terceiros.</p>
+  </footer>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dname" tabindex="-1"></aside>
+
+<script id="dados" type="application/json">/*__DADOS__*/null</script>
+<script>
+(() => {
+  'use strict';
+  // Os dados entram como JSON (não executável). Todo texto de usuário é inserido com textContent: sem innerHTML.
+  const DATA = JSON.parse(document.getElementById('dados').textContent);
+  const TZ = 'America/Sao_Paulo';
+  const NOW = Date.now();
+  const DAY = 86400000;
+
+  const el = (tag, props, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(props || {})) {
+      if (v == null || v === false) continue;
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+      else if (k === 'dataset') Object.assign(n.dataset, v);
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) n.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+    return n;
+  };
+  const svgEl = (tag, attrs, text) => {
+    const n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs || {})) n.setAttribute(k, v);
+    if (text != null) n.textContent = text;
+    return n;
+  };
+
+  // ---------------- formatação
+  const dt = new Intl.DateTimeFormat('pt-BR', { timeZone: TZ, day: '2-digit', month: '2-digit', year: 'numeric' });
+  const dtt = new Intl.DateTimeFormat('pt-BR', { timeZone: TZ, day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const fmtDate = (iso) => (iso ? dt.format(new Date(iso.length === 10 ? iso + 'T12:00:00' : iso)) : '—');
+  const fmtDateTime = (iso) => (iso ? dtt.format(new Date(iso)) : '—');
+  const ago = (iso) => {
+    if (!iso) return 'nunca';
+    const d = Math.floor((NOW - Date.parse(iso)) / DAY);
+    if (d <= 0) return 'hoje';
+    if (d === 1) return 'ontem';
+    if (d < 30) return `há ${d} dias`;
+    if (d < 365) return `há ${Math.floor(d / 30)} ${Math.floor(d / 30) === 1 ? 'mês' : 'meses'}`;
+    return `há ${Math.floor(d / 365)} ano(s)`;
+  };
+  const daysSince = (iso) => (iso ? Math.floor((NOW - Date.parse(iso)) / DAY) : Infinity);
+  const initials = (name) => (name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0].toUpperCase()).join('');
+  const hue = (s) => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+  const PROVIDER = { google: 'Google', microsoft: 'Outlook', facebook: 'Meta' };
+  const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+  const sum = (xs, f) => xs.reduce((s, x) => s + f(x), 0);
+  const phoneFmt = (p) => {
+    if (!p) return '—';
+    if (p.startsWith('+')) return p;
+    const d = p.replace(/\D/g, '');
+    return d.length === 11 ? `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}` : d.length === 10 ? `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}` : p;
+  };
+
+  const users = DATA.users;
+  const method = (u) => (u.providers.length && u.hasPassword ? 'both' : u.providers.length ? 'social' : 'password');
+
+  // ---------------- cabeçalho e avisos
+  document.getElementById('sub').textContent =
+    `Gerado em ${fmtDateTime(DATA.meta.generatedAt)} · origem: ${DATA.meta.source} · somente leitura`;
+  const banners = document.getElementById('banners');
+  if (DATA.meta.demo) banners.append(el('div', { class: 'banner demo', role: 'note', text: '⚠️ DADOS DE EXEMPLO — pessoas e números fictícios, só para ver o layout. Nenhum banco foi lido.' }));
+  if (!users.length) banners.append(el('div', { class: 'banner info', text: 'Nenhum usuário encontrado neste banco.' }));
+
+  // ---------------- indicadores
+  const active7 = users.filter((u) => daysSince(u.lastActivityAt) <= 7).length;
+  const active30 = users.filter((u) => daysSince(u.lastActivityAt) <= 30).length;
+  const withStudents = users.filter((u) => u.students.total > 0).length;
+  const kpiDefs = [
+    ['Usuários', users.length, `${users.filter((u) => daysSince(u.createdAt) <= 30).length} novos em 30 dias`],
+    ['Ativos em 7 dias', active7, `${pct(active7, users.length)}% do total`],
+    ['Ativos em 30 dias', active30, `${pct(active30, users.length)}% do total`],
+    ['E-mail confirmado', pct(users.filter((u) => u.emailVerified).length, users.length) + '%', `${users.filter((u) => u.emailVerified).length} de ${users.length}`],
+    ['Cadastro completo', pct(users.filter((u) => u.profileCompletedAt).length, users.length) + '%', 'nome, CPF e celular'],
+    ['Com 2FA', pct(users.filter((u) => u.mfa).length, users.length) + '%', `${users.filter((u) => u.mfa).length} usuário(s)`],
+    ['Já usam alunos', withStudents, `${sum(users, (u) => u.students.total)} alunos no total`],
+    ['Aulas realizadas (30d)', sum(users, (u) => u.lessons.realized30), `${sum(users, (u) => u.lessons.realized)} no total`],
+  ];
+  document.getElementById('kpis').append(...kpiDefs.map(([label, value, sub]) =>
+    el('div', { class: 'card kpi' }, el('div', { class: 'label', text: label }), el('div', { class: 'value', text: String(value) }), el('div', { class: 'sub', text: sub }))));
+
+  // ---------------- gráficos (SVG simples, sem biblioteca)
+  function barChart(host, items, { height = 150, color = 'var(--bar)', labelEvery = 1, emptyText = 'Sem dados' } = {}) {
+    host.replaceChildren();
+    if (!items.length || items.every((i) => !i.value)) { host.append(el('p', { class: 'muted', text: emptyText })); return; }
+    const W = 520, padB = 22, padT = 18, gap = 6;
+    const max = Math.max(...items.map((i) => i.value), 1);
+    const bw = (W - gap * (items.length - 1)) / items.length;
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${height + padB + padT}`, role: 'img', 'aria-label': items.map((i) => `${i.label}: ${i.value}`).join('; ') });
+    svg.append(svgEl('line', { x1: 0, x2: W, y1: padT + height, y2: padT + height, stroke: 'var(--line-strong)' }));
+    items.forEach((it, i) => {
+      const h = Math.round((it.value / max) * height);
+      const x = i * (bw + gap);
+      const g = svgEl('g');
+      const r = svgEl('rect', { x, y: padT + height - h, width: bw, height: Math.max(h, it.value ? 2 : 0), rx: Math.min(4, bw / 2), fill: color });
+      r.append(svgEl('title', {}, `${it.label}: ${it.value}`));
+      g.append(r);
+      if (it.value && (items.length <= 14 || it.value === max)) g.append(svgEl('text', { x: x + bw / 2, y: padT + height - h - 5, 'text-anchor': 'middle', class: 'val' }, String(it.value)));
+      if (i % labelEvery === 0) g.append(svgEl('text', { x: x + bw / 2, y: padT + height + 15, 'text-anchor': 'middle', class: 'axis' }, it.short ?? it.label));
+      svg.append(g);
+    });
+    host.append(svg);
+  }
+
+  // cadastros por mês (últimos 12)
+  const months = [];
+  const ref = new Date(NOW);
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(Date.UTC(ref.getUTCFullYear(), ref.getUTCMonth() - i, 1));
+    months.push({ key: d.toISOString().slice(0, 7), label: d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' }), short: d.toLocaleDateString('pt-BR', { month: 'short', timeZone: 'UTC' }).replace('.', ''), value: 0 });
+  }
+  for (const u of users) { const m = months.find((x) => x.key === u.createdAt.slice(0, 7)); if (m) m.value++; }
+  barChart(document.getElementById('chSignups'), months, { labelEvery: 1, emptyText: 'Nenhum cadastro nos últimos 12 meses' });
+
+  // logins por dia (30 dias)
+  const loginMap = new Map(DATA.loginsByDay.map((r) => [r.d, r.n]));
+  const days = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(NOW - i * DAY - 3 * 3600000);
+    const key = d.toISOString().slice(0, 10);
+    days.push({ label: key.split('-').reverse().slice(0, 2).join('/'), short: key.slice(8) + '/' + key.slice(5, 7), value: loginMap.get(key) ?? 0 });
+  }
+  barChart(document.getElementById('chLogins'), days, { color: 'var(--pink)', labelEvery: 5, emptyText: 'Nenhum login nos últimos 30 dias' });
+
+  // funil
+  const steps = [
+    ['Cadastraram', users.length],
+    ['Confirmaram e-mail', users.filter((u) => u.emailVerified).length],
+    ['Completaram perfil', users.filter((u) => u.profileCompletedAt).length],
+    ['Cadastraram aluno', users.filter((u) => u.students.total > 0).length],
+    ['Agendaram/deram aula', users.filter((u) => u.lessons.total > 0).length],
+  ];
+  const funnel = document.getElementById('funnel');
+  steps.forEach(([label, n], i) => funnel.append(el('div', { class: 'row' },
+    el('span', { text: label }),
+    el('div', { class: 'track' }, el('div', { class: 'fill', style: `width:${pct(n, steps[0][1])}%` })),
+    el('span', { class: 'n' }, String(n), ' ', el('small', { text: i ? `(${pct(n, steps[i - 1][1])}%)` : '' })))));
+
+  // métodos de entrada (barra empilhada)
+  (function methods() {
+    const host = document.getElementById('chMethods');
+    const defs = [['password', 'Só e-mail e senha', 'var(--bar)'], ['social', 'Só login social', 'var(--pink)'], ['both', 'Senha + social', 'var(--bar-2)']];
+    const counts = defs.map(([k]) => users.filter((u) => method(u) === k).length);
+    const total = users.length || 1;
+    const svg = svgEl('svg', { viewBox: '0 0 520 40', role: 'img', 'aria-label': defs.map(([, l], i) => `${l}: ${counts[i]}`).join('; ') });
+    let x = 0;
+    counts.forEach((c, i) => {
+      const w = (c / total) * 520;
+      if (!c) return;
+      const r = svgEl('rect', { x, y: 6, width: Math.max(w - 2, 1), height: 28, rx: 6, fill: defs[i][2] });
+      r.append(svgEl('title', {}, `${defs[i][1]}: ${c}`));
+      svg.append(r);
+      if (w > 34) svg.append(svgEl('text', { x: x + w / 2, y: 25, 'text-anchor': 'middle', class: 'val', fill: '#fff', style: 'fill:#fff' }, String(c)));
+      x += w;
+    });
+    host.append(svg);
+    const legend = el('div', { class: 'legend' });
+    defs.forEach(([, l, c], i) => legend.append(el('span', {}, el('i', { style: `background:${c}` }), `${l}: ${counts[i]} (${pct(counts[i], users.length)}%)`)));
+    const byProv = {};
+    for (const u of users) for (const p of u.providers) byProv[p] = (byProv[p] || 0) + 1;
+    for (const [p, n] of Object.entries(byProv)) legend.append(el('span', { text: `${PROVIDER[p] || p}: ${n}` }));
+    host.append(legend);
+  })();
+
+  // ---------------- filtros, ordenação e tabela
+  const state = { q: '', chip: 'all', provider: 'all', sort: 'createdAt', dir: 'desc' };
+  const chips = [
+    ['all', 'Todos', () => true],
+    ['a7', 'Ativos 7d', (u) => daysSince(u.lastActivityAt) <= 7],
+    ['a30', 'Ativos 30d', (u) => daysSince(u.lastActivityAt) <= 30],
+    ['i30', 'Inativos 30d+', (u) => daysSince(u.lastActivityAt) > 30],
+    ['new', 'Novos (30d)', (u) => daysSince(u.createdAt) <= 30],
+    ['unv', 'E-mail não confirmado', (u) => !u.emailVerified],
+    ['np', 'Perfil incompleto', (u) => !u.profileCompletedAt],
+    ['mfa', 'Com 2FA', (u) => u.mfa],
+    ['nostu', 'Sem alunos', (u) => u.students.total === 0],
+    ['fail', 'Falhas de login (30d)', (u) => u.failedLogins30 > 0],
+  ];
+  const providerSelect = document.getElementById('provider');
+  [['all', 'Todos os métodos'], ['password', 'Só e-mail e senha'], ['social', 'Só login social'], ['both', 'Senha + social'],
+   ...[...new Set(users.flatMap((u) => u.providers))].map((p) => ['p:' + p, 'Com ' + (PROVIDER[p] || p)])]
+    .forEach(([v, t]) => providerSelect.append(el('option', { value: v, text: t })));
+
+  const norm = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const cols = [
+    ['name', 'Usuário', false, (u) => norm(u.name)],
+    ['createdAt', 'Cadastro', false, (u) => u.createdAt],
+    ['lastActivityAt', 'Último acesso', false, (u) => u.lastActivityAt || ''],
+    ['students', 'Alunos', true, (u) => u.students.active],
+    ['lessons30', 'Aulas (30d)', true, (u) => u.lessons.realized30],
+    ['status', 'Situação', false, null],
+  ];
+  const sorter = Object.fromEntries(cols.map(([k, , , f]) => [k, f]));
+
+  function visible() {
+    const q = norm(state.q.trim());
+    const chip = chips.find((c) => c[0] === state.chip)[2];
+    return users.filter((u) => {
+      if (!chip(u)) return false;
+      if (state.provider !== 'all') {
+        if (state.provider.startsWith('p:')) { if (!u.providers.includes(state.provider.slice(2))) return false; }
+        else if (method(u) !== state.provider) return false;
+      }
+      if (!q) return true;
+      return norm([u.name, u.email, u.city, u.state, u.phone].join(' ')).includes(q);
+    }).sort((a, b) => {
+      const f = sorter[state.sort];
+      if (!f) return 0;
+      const va = f(a), vb = f(b);
+      const c = va < vb ? -1 : va > vb ? 1 : 0;
+      return state.dir === 'asc' ? c : -c;
+    });
+  }
+
+  const chipsHost = document.getElementById('chips');
+  function renderChips() {
+    chipsHost.replaceChildren(...chips.map(([key, label, fn]) =>
+      el('button', { class: 'chip', type: 'button', 'aria-pressed': String(state.chip === key), onclick: () => { state.chip = key; render(); } },
+        label, el('span', { class: 'c', text: String(users.filter(fn).length) }))));
+  }
+
+  const statusPills = (u) => [
+    el('span', { class: 'pill ' + (u.emailVerified ? 'good' : 'warn'), text: u.emailVerified ? '✓ e-mail' : '✗ e-mail' }),
+    el('span', { class: 'pill ' + (u.profileCompletedAt ? 'good' : 'warn'), text: u.profileCompletedAt ? '✓ perfil' : '✗ perfil' }),
+    u.mfa ? el('span', { class: 'pill good', text: '🔐 2FA' }) : null,
+    ...u.providers.map((p) => el('span', { class: 'pill neutral', text: PROVIDER[p] || p })),
+    u.failedLogins30 ? el('span', { class: 'pill bad', text: `${u.failedLogins30} falha(s)` }) : null,
+  ];
+
+  function renderTable() {
+    const rows = visible();
+    document.getElementById('count').textContent = `${rows.length} de ${users.length} usuário(s)`;
+    const table = document.getElementById('table');
+    const head = el('tr', {}, cols.map(([key, label, isNum]) => {
+      const th = el('th', { class: isNum ? 'num' : '', scope: 'col', 'aria-sort': state.sort === key ? (state.dir === 'asc' ? 'ascending' : 'descending') : 'none' });
+      if (sorter[key]) th.append(el('button', { type: 'button', text: label, onclick: () => { state.dir = state.sort === key && state.dir === 'desc' ? 'asc' : 'desc'; state.sort = key; renderTable(); } }));
+      else th.textContent = label;
+      return th;
+    }));
+    const body = el('tbody');
+    for (const u of rows) {
+      const open = () => openDrawer(u);
+      body.append(el('tr', { tabindex: '0', role: 'button', 'aria-label': `Abrir detalhes de ${u.name}`, onclick: open, onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } } },
+        el('td', {}, el('div', { class: 'who' }, el('div', { class: 'avatar', style: `background:hsl(${hue(u.email)} 55% 48%)`, 'aria-hidden': 'true', text: initials(u.name) }), el('div', {}, el('b', { text: u.name }), el('span', { text: u.email })))),
+        el('td', {}, fmtDate(u.createdAt), el('div', { class: 'muted', text: ago(u.createdAt) })),
+        el('td', {}, ago(u.lastActivityAt), el('div', { class: 'muted', text: u.lastActivityAt ? fmtDate(u.lastActivityAt) : '' })),
+        el('td', { class: 'num' }, String(u.students.active), el('div', { class: 'muted', text: u.students.total !== u.students.active ? `${u.students.total} no total` : '' })),
+        el('td', { class: 'num', text: String(u.lessons.realized30) }),
+        el('td', {}, statusPills(u))));
+    }
+    table.replaceChildren(el('thead', {}, head), body);
+    if (!rows.length) table.after(el('div', { class: 'empty', id: 'emptyMsg', text: 'Nenhum usuário com esses filtros.' }));
+    else document.getElementById('emptyMsg')?.remove();
+  }
+
+  function render() { renderChips(); renderTable(); }
+  document.getElementById('q').addEventListener('input', (e) => { state.q = e.target.value; renderTable(); });
+  providerSelect.addEventListener('change', (e) => { state.provider = e.target.value; renderTable(); });
+
+  // ---------------- gaveta de detalhes
+  const drawer = document.getElementById('drawer');
+  const backdrop = document.getElementById('backdrop');
+  let lastFocus = null;
+  const row = (k, v) => [el('dt', { text: k }), el('dd', {}, v ?? '—')];
+  function openDrawer(u) {
+    lastFocus = document.activeElement;
+    const label = (t) => DATA.labels.events[t] || t;
+    drawer.replaceChildren(
+      el('div', { class: 'dhead' },
+        el('div', { class: 'avatar', style: `background:hsl(${hue(u.email)} 55% 48%)`, 'aria-hidden': 'true', text: initials(u.name) }),
+        el('div', {}, el('h3', { id: 'dname', text: u.name }), el('div', { class: 'muted', text: u.email })),
+        el('button', { class: 'btn close', type: 'button', 'aria-label': 'Fechar detalhes', text: 'Fechar', onclick: closeDrawer })),
+      el('div', { class: 'section' }, statusPills(u)),
+      el('div', { class: 'card section' }, el('h2', { text: 'Perfil' }), el('dl', {},
+        row('Cadastro', `${fmtDateTime(u.createdAt)} (${ago(u.createdAt)})`),
+        row('Termos aceitos', fmtDateTime(u.termsAcceptedAt)),
+        row('Celular', phoneFmt(u.phone)),
+        row('Cidade', u.city ? `${u.city}${u.state ? ' / ' + u.state : ''}` : '—'),
+        row('CPF', u.cpfMasked || '—'),
+        row('Fuso', u.timezone),
+        row('Lembrete de aula', u.reminders.lessonMinutes ? `${u.reminders.lessonMinutes} min antes` : 'desligado'),
+        row('Push', u.pushDevices ? `${u.pushDevices} aparelho(s)` : 'nenhum'))),
+      el('div', { class: 'card section' }, el('h2', { text: 'Segurança e acesso' }), el('dl', {},
+        row('Entra com', [u.hasPassword ? 'e-mail e senha' : null, ...u.providers.map((p) => PROVIDER[p] || p)].filter(Boolean).join(' + ') || '—'),
+        row('2FA', u.mfa ? 'ativada' : 'desativada'),
+        row('Último login', u.lastLoginAt ? `${fmtDateTime(u.lastLoginAt)} (${ago(u.lastLoginAt)})` : 'nunca'),
+        row('Última atividade', u.lastActivityAt ? `${fmtDateTime(u.lastActivityAt)} (${ago(u.lastActivityAt)})` : 'nunca'),
+        row('Logins registrados', String(u.loginCount)),
+        row('Falhas (30 dias)', String(u.failedLogins30)),
+        row('Sessões ativas', u.sessions.length ? el('span', {}, u.sessions.map((s) => el('div', { text: `${s.device} · ${s.ip || '—'} · ativa ${ago(s.lastActiveAt)}` }))) : '0'))),
+      el('div', { class: 'card section' }, el('h2', { text: 'Uso' }),
+        el('div', { class: 'stats' },
+          stat(u.students.active, 'alunos ativos'), stat(u.students.paused, 'pausados'), stat(u.students.inactive, 'inativos'),
+          stat(u.lessons.realized, 'aulas realizadas'), stat(u.lessons.realized30, 'realizadas em 30d'), stat(u.lessons.upcoming, 'agendadas pela frente')),
+        el('dl', { style: 'margin-top:10px' }, row('Total de aulas', String(u.lessons.total)), row('Última aula dada', u.lessons.lastAt ? `${fmtDate(u.lessons.lastAt)} (${ago(u.lessons.lastAt)})` : '—'))),
+      el('div', { class: 'card section' }, el('h2', { text: 'Atividade recente' }),
+        u.events.length
+          ? el('ul', { class: 'timeline' }, u.events.slice(0, 15).map((e) => el('li', { class: /FAIL|LOCK/.test(e.type) ? 'fail' : '' },
+              el('div', {}, label(e.type), el('small', { text: `${fmtDateTime(e.at)} · ${e.device || '—'} · ${e.ip || '—'}` })))))
+          : el('p', { class: 'muted', text: 'Sem eventos registrados.' })));
+    drawer.classList.add('open');
+    backdrop.classList.add('open');
+    drawer.scrollTop = 0;
+    drawer.focus();
+  }
+  function stat(v, label) { return el('div', { class: 'stat' }, el('b', { text: String(v) }), el('span', { text: label })); }
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    backdrop.classList.remove('open');
+    lastFocus?.focus?.();
+  }
+  backdrop.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer(); });
+
+  // ---------------- CSV (cuidado com fórmulas: nomes são texto livre do usuário)
+  document.getElementById('csv').addEventListener('click', () => {
+    const cell = (v) => {
+      let s = v == null ? '' : String(v);
+      if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+      return /[;"\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const head = ['Nome', 'E-mail', 'Cadastro', 'Último acesso', 'E-mail confirmado', 'Perfil completo', '2FA', 'Método', 'Cidade', 'UF', 'Celular', 'Alunos ativos', 'Alunos total', 'Aulas realizadas', 'Aulas 30d', 'Falhas de login 30d'];
+    const rows = visible().map((u) => [u.name, u.email, u.createdAt?.slice(0, 10), u.lastActivityAt?.slice(0, 10), u.emailVerified ? 'sim' : 'não', u.profileCompletedAt ? 'sim' : 'não', u.mfa ? 'sim' : 'não',
+      [u.hasPassword ? 'senha' : null, ...u.providers].filter(Boolean).join('+'), u.city, u.state, u.phone, u.students.active, u.students.total, u.lessons.realized, u.lessons.realized30, u.failedLogins30]);
+    const blob = new Blob(['﻿' + [head, ...rows].map((r) => r.map(cell).join(';')).join('\r\n') + '\r\n'], { type: 'text/csv;charset=utf-8' });
+    const a = el('a', { href: URL.createObjectURL(blob), download: `turmei-usuarios-${new Date().toISOString().slice(0, 10)}.csv` });
+    document.body.append(a); a.click(); a.remove();
+  });
+
+  // ---------------- tema
+  const root = document.documentElement;
+  try { const t = localStorage.getItem('painel-tema'); if (t) root.dataset.theme = t; } catch { /* sem armazenamento */ }
+  document.getElementById('theme').addEventListener('click', () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    try { localStorage.setItem('painel-tema', root.dataset.theme); } catch { /* ignora */ }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
