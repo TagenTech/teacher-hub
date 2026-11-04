@@ -110,7 +110,7 @@ export class EntitlementsWebhookService {
 
     // Dedupe dentro de transação: insert falha na unique se já processamos.
     const inserted = await this.db.query(
-      'INSERT INTO webhook_events (dedupe_key, event) VALUES ($1, $2) ON CONFLICT (dedupe_key) DO NOTHING RETURNING dedupe_key',
+      'INSERT INTO turmei_webhook_events (dedupe_key, event) VALUES ($1, $2) ON CONFLICT (dedupe_key) DO NOTHING RETURNING dedupe_key',
       [dedupeKey, event],
     );
     if (!inserted.length) return { ok: true, duplicate: true };
