@@ -104,6 +104,10 @@ export class Teacher {
   @Column({ name: 'backoffice_entitlement_id', type: 'uuid', nullable: true, unique: true })
   backofficeEntitlementId: string | null;
 
+  /** Última versão do entitlement aplicada — eventos fora de ordem são ignorados. */
+  @Column({ name: 'backoffice_entitlement_version', type: 'integer', default: 0 })
+  backofficeEntitlementVersion: number;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

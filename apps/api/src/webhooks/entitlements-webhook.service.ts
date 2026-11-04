@@ -11,7 +11,10 @@ import { WebhookEvent } from './entities/webhook-event.entity';
 const REPLAY_WINDOW_S = 300;
 
 interface EntitlementPayload {
+  event_id?: string;
   event?: string;
+  occurred_at?: string;
+  version?: number;
   product?: string;
   sent_at?: string;
   entitlement?: {
@@ -97,9 +100,13 @@ export class EntitlementsWebhookService {
     }
 
     const ent = payload.entitlement ?? {};
-    const dedupeKey = createHash('sha256')
-      .update(`${timestamp}.${event}.${ent.id ?? ''}.${payload.sent_at ?? ''}`)
-      .digest('hex');
+    // Dedupe pelo event_id do contrato; fallback no hash da entrega para
+    // integrações antigas que ainda não enviam event_id.
+    const dedupeKey = payload.event_id
+      ? `evt_${payload.event_id}`
+      : createHash('sha256')
+          .update(`${timestamp}.${event}.${ent.id ?? ''}.${payload.sent_at ?? ''}`)
+          .digest('hex');
 
     // Dedupe dentro de transação: insert falha na unique se já processamos.
     const inserted = await this.db.query(
@@ -108,11 +115,15 @@ export class EntitlementsWebhookService {
     );
     if (!inserted.length) return { ok: true, duplicate: true };
 
-    await this.apply(event, ent);
+    await this.apply(event, ent, payload.version ?? 0);
     return { ok: true };
   }
 
-  private async apply(event: string, ent: NonNullable<EntitlementPayload['entitlement']>) {
+  private async apply(
+    event: string,
+    ent: NonNullable<EntitlementPayload['entitlement']>,
+    version: number,
+  ) {
     const teacher = await this.findTeacher(ent);
     if (!teacher) {
       // Conta ainda não existe no produto (signup chega pelo /api/provision).
@@ -120,9 +131,18 @@ export class EntitlementsWebhookService {
       return;
     }
 
-    if (ent.id && teacher.backofficeEntitlementId !== ent.id) {
-      await this.teachers.update(teacher.id, { backofficeEntitlementId: ent.id });
+    // Evento fora de ordem/atrasado: nunca regride o estado aplicado.
+    if (version > 0 && version <= teacher.backofficeEntitlementVersion) {
+      this.logger.log(`Evento ${event} v${version} ignorado (atual: v${teacher.backofficeEntitlementVersion})`);
+      return;
     }
+
+    const patch: Partial<Teacher> = {};
+    if (ent.id && teacher.backofficeEntitlementId !== ent.id) {
+      patch.backofficeEntitlementId = ent.id;
+    }
+    if (version > 0) patch.backofficeEntitlementVersion = version;
+    if (Object.keys(patch).length) await this.teachers.update(teacher.id, patch);
 
     switch (event) {
       case 'entitlement.suspended':
