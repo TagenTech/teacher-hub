@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -65,6 +65,7 @@ export class OAuthError extends Error {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   private readonly attempts = new LoginAttempts();
   private readonly mfaAttempts = new LoginAttempts();
   private readonly usedMfaTokens = new Map<string, number>();
@@ -106,6 +107,10 @@ export class AuthService {
 
   /** Senha (ou social) ok: se tem 2FA, devolve o desafio; senão, a sessão. */
   private async afterPrimaryAuth(teacher: Teacher, ctx: RequestContext, via = 'password'): Promise<LoginOutcome> {
+    // Conta suspensa pelo backoffice (inadimplência/cancelamento): ninguém entra.
+    if (teacher.suspendedAt) {
+      throw new ForbiddenException('Conta suspensa. Fale com o suporte.');
+    }
     if (teacher.mfaEnabledAt) {
       const mfaToken = await this.jwt.signAsync(
         { sub: teacher.id, email: teacher.email, purpose: 'mfa', jti: randomUUID() } satisfies JwtPayload & { jti: string },
@@ -158,6 +163,7 @@ export class AuthService {
     const teacher = await this.teachers.createWithPassword(name, email, password);
     await this.events.record(Ev.SIGNUP, teacher.id, ctx);
     await this.sendVerification(teacher);
+    this.provisionInBackoffice(teacher);
     return this.issue(teacher, ctx);
   }
 
@@ -412,6 +418,28 @@ export class AuthService {
     }
     await this.emailTokens.update(row.id, { usedAt: new Date() });
     return row;
+  }
+
+  /**
+   * Cadastro no produto → conta pendente no backoffice Tagen (liberação manual).
+   * Fire-and-forget: falha nunca bloqueia o signup nem revela detalhes ao cliente.
+   */
+  private provisionInBackoffice(teacher: Teacher) {
+    const url = this.config.get('backoffice.provisionUrl', { infer: true });
+    const apiKey = this.config.get('backoffice.apiKey', { infer: true });
+    if (!url || !apiKey) return;
+    fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-tagen-api-key': apiKey },
+      body: JSON.stringify({
+        name: teacher.name,
+        email: teacher.email,
+        external_ref: teacher.id,
+      }),
+      signal: AbortSignal.timeout(10_000),
+    }).catch((err) => {
+      this.logger.warn(`Provisionamento no backoffice falhou: ${(err as Error).message}`);
+    });
   }
 
   private webUrl() {

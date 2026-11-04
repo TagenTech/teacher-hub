@@ -8,7 +8,7 @@ let appPromise: Promise<NestExpressApplication> | undefined;
 
 async function getApp() {
   appPromise ??= (async () => {
-    const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
     configureApp(app);
     await app.init();
     return app;

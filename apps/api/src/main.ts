@@ -9,7 +9,8 @@ import { AppModule } from './app.module';
 import { configureApp } from './configure-app';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // rawBody para validar a assinatura HMAC dos webhooks do backoffice.
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
   const { prefix, port } = configureApp(app);
   await app.listen(port);
   Logger.log(`API em http://localhost:${port}/${prefix}`, 'Bootstrap');

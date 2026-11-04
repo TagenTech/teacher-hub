@@ -14,6 +14,8 @@ export interface AppConfig {
   publicWebUrl: string;
   vapid: { publicKey: string | null; privateKey: string | null; subject: string };
   signupEnabled: boolean;
+  entitlements: { secret: string | null; productSlug: string };
+  backoffice: { provisionUrl: string | null; apiKey: string | null };
   oauth: Record<'google' | 'microsoft' | 'facebook', { clientId: string; clientSecret: string } | null>;
 }
 
@@ -61,6 +63,18 @@ export default (): AppConfig => {
       subject: process.env.VAPID_SUBJECT || 'mailto:contato@turmei.app',
     },
     signupEnabled: process.env.SIGNUP_ENABLED !== 'false',
+    entitlements: {
+      // Segredo HMAC do webhook de liberação de contas (backoffice → produto).
+      secret: process.env.TAGEN_ENTITLEMENTS_SECRET || null,
+      productSlug: process.env.TAGEN_PRODUCT_SLUG || 'turmei',
+    },
+    backoffice: {
+      // Endpoint de provisionamento (produto → backoffice) chamado no cadastro.
+      provisionUrl: process.env.TAGEN_BACKOFFICE_URL
+        ? `${process.env.TAGEN_BACKOFFICE_URL.replace(/\/$/, '')}/api/provision`
+        : null,
+      apiKey: process.env.TAGEN_BACKOFFICE_API_KEY || null,
+    },
     oauth: {
       google: creds('GOOGLE'),
       microsoft: creds('MICROSOFT'),

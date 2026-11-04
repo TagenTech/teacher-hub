@@ -96,6 +96,14 @@ export class Teacher {
   @Column({ name: 'ics_token', type: 'varchar', length: 64, nullable: true, unique: true })
   icsToken: string | null;
 
+  /** Conta suspensa pelo backoffice Tagen (inadimplência, cancelamento). */
+  @Column({ name: 'suspended_at', type: 'timestamptz', nullable: true })
+  suspendedAt: Date | null;
+
+  /** Vínculo com a conta (entitlement) no backoffice Tagen. */
+  @Column({ name: 'backoffice_entitlement_id', type: 'uuid', nullable: true, unique: true })
+  backofficeEntitlementId: string | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

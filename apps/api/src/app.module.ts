@@ -21,6 +21,7 @@ import { TeachersModule } from './professor/teachers.module';
 import { getDatabaseOptions } from './database/db-options';
 import { JobsModule } from './jobs/jobs.module';
 import { ContactModule } from './contact/contact.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ContactModule } from './contact/contact.module';
     ReportsModule,
     JobsModule,
     ContactModule,
+    WebhooksModule,
   ],
   controllers: [HealthController],
   providers: [
