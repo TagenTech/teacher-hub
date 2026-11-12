@@ -1,12 +1,20 @@
 import { join } from 'path';
-import type { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 export const TABLE_PREFIX = 'turmei_';
 
-export function getDatabaseOptions(url: string): Pick<
-  PostgresConnectionOptions,
-  'type' | 'url' | 'ssl' | 'entityPrefix' | 'migrationsTableName' | 'uuidExtension' | 'migrations' | 'extra'
-> {
+/** Opções do Postgres aceitas por TypeOrmModule/DataSource (evita import profundo do typeorm). */
+export interface DatabaseOptions {
+  type: 'postgres';
+  url: string;
+  ssl: false | { rejectUnauthorized: boolean };
+  entityPrefix: string;
+  migrationsTableName: string;
+  uuidExtension: 'pgcrypto' | 'uuid-ossp';
+  migrations: string[];
+  extra: { max: number };
+}
+
+export function getDatabaseOptions(url: string): DatabaseOptions {
   return {
     type: 'postgres',
     url,
