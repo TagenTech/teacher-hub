@@ -6,7 +6,7 @@ name: Deploy
 # workflow nada publica.
 on:
   push:
-    branches: [main]
+    branches: [develop]
     paths:
       - 'apps/api/**'
       - 'apps/web/**'
