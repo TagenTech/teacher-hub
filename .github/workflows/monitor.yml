@@ -1,0 +1,25 @@
+name: Monitoramento
+
+# A cada 30 min confere se o site, a API e o banco respondem. Se falhar, o
+# GitHub avisa por e-mail quem administra o repositório. Grátis.
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Site no ar
+        run: curl -fsSL --max-time 15 -o /dev/null https://turmei.com.br
+
+      - name: API no ar (health já faz SELECT 1 no banco)
+        run: curl -fsS --max-time 15 https://turmei-api.vercel.app/v1/health | grep -q '"status":"ok"'
+
+      - name: Banco respondendo
+        # Rota pública que consulta a tabela de professors pelo token do .ics: 404 = banco ok; outro código = problema.
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 'https://turmei-api.vercel.app/v1/calendar/monitoramento-inexistente.ics')
+          echo "HTTP $code"
+          test "$code" = "404"

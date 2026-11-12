@@ -1,0 +1,58 @@
+name: Backup do banco
+
+# Dump diário do Postgres (Supabase) criptografado, guardado na branch `backups`
+# do próprio repositório (privado). Grátis: usa só os minutos do GitHub Actions.
+# Para restaurar: ver docs/BACKUP.md.
+on:
+  schedule:
+    - cron: '53 6 * * *' # 03:53 (horário de Brasília) todos os dias
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Prepara a branch de backups
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin backups || true
+          if git rev-parse --verify origin/backups >/dev/null 2>&1; then
+            git checkout -B backups origin/backups
+          else
+            git checkout --orphan backups
+            git rm -rf .
+          fi
+          mkdir -p backups
+
+      - name: Dump do banco + criptografia
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          URL="$(printf '%s' "$DATABASE_URL" | sed 's/sslmode=no-verify/sslmode=require/')"
+          FILE="backups/turmei-$(date -u +%Y-%m-%d_%H%M).sql.gz.enc"
+          docker run --rm -e PGURL="$URL" postgres:17 sh -c 'pg_dump "$PGURL" --no-owner --no-privileges --format=plain' \
+            | gzip -9 \
+            | openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BACKUP_PASSPHRASE -out "$FILE"
+          ls -lh "$FILE"
+
+      - name: Guarda os últimos 45 dias e envia
+        run: |
+          set -euo pipefail
+          find backups -name 'turmei-*.enc' -mtime +45 -delete
+          git add backups/
+          if git diff --cached --quiet; then
+            echo "Nada novo para guardar."
+          else
+            git commit -m "Backup do banco $(date -u +%Y-%m-%d)"
+            git push origin backups
+          fi
