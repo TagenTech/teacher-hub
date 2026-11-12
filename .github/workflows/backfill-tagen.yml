@@ -1,0 +1,31 @@
+name: Backfill Tagen
+
+# Envia ao /api/provision do backoffice todos os professores já cadastrados.
+# Idempotente (o backoffice deduplica por produto+external_ref) — pode rodar de novo.
+# Uso: Actions → Backfill Tagen → Run workflow (dry_run ligado só lista).
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Só listar os professores, sem enviar'
+        type: boolean
+        default: true
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Backfill dos professores
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DB_SSL: 'true'
+          TAGEN_BACKOFFICE_URL: ${{ secrets.TAGEN_BACKOFFICE_URL }}
+          TAGEN_BACKOFFICE_API_KEY: ${{ secrets.TAGEN_BACKOFFICE_API_KEY }}
+        run: pnpm --filter @turmei/api backfill-tagen -- ${{ inputs.dry_run && '--dry-run' || '' }}

@@ -38,7 +38,6 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@turmei/contracts": "workspace:^",
     "@nestjs/common": "^11.2.8",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.2.8",
@@ -50,6 +49,7 @@
     "@nestjs/throttler": "^6.7.1",
     "@nestjs/typeorm": "^11.0.3",
     "@sentry/node": "^10",
+    "@turmei/contracts": "workspace:^",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -71,6 +71,7 @@
     "@types/express": "^5.0.6",
     "@types/jest": "^29.5.14",
     "@types/node": "^22",
+    "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
     "@types/web-push": "^3.6.4",
     "jest": "^29.7.0",

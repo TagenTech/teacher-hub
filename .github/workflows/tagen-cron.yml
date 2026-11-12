@@ -3,8 +3,15 @@ name: Cron Tagen
 # Agenda o heartbeat do backoffice no pg_cron do Supabase (job turmei-tagen-heartbeat).
 # Usa SUPABASE_MIGRATIONS_URL (mesmo segredo do workflow de migrations) e lê
 # turmei_api_url/turmei_cron_secret do Vault — ver deploy/supabase/tagen-heartbeat.sql.
+# Com ping=true dispara uma chamada de teste na hora e mostra a resposta do
+# net._http_response (valida Vault ↔ Vercel CRON_SECRET ↔ backoffice).
 on:
   workflow_dispatch:
+    inputs:
+      ping:
+        description: 'Dispara um heartbeat de teste além de agendar'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -20,3 +27,22 @@ jobs:
           DATABASE_URL: ${{ secrets.SUPABASE_MIGRATIONS_URL }}
           PGSSLMODE: require
         run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f deploy/supabase/tagen-heartbeat.sql
+      - name: Pulso de validação do heartbeat
+        if: inputs.ping
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_MIGRATIONS_URL }}
+          PGSSLMODE: require
+        run: |
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          select net.http_post(
+            url := (select decrypted_secret from vault.decrypted_secrets where name = 'turmei_api_url') || '/v1/internal/jobs/tagen-heartbeat',
+            headers := jsonb_build_object(
+              'Content-Type', 'application/json',
+              'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'turmei_cron_secret')
+            ),
+            body := '{}'::jsonb,
+            timeout_milliseconds := 30000
+          );
+          select pg_sleep(15);
+          select * from net._http_response order by id desc limit 1;
+          SQL
