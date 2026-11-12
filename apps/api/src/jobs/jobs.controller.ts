@@ -37,6 +37,7 @@ export class JobsController {
       pauses: () => this.students.resumeExpiredPauses(),
       billing: () => this.billing.generateAll(),
       'security-prune': () => this.securityEvents.prune(),
+      'tagen-heartbeat': () => this.tagenHeartbeat(),
     };
     const runJob = Object.prototype.hasOwnProperty.call(jobs, job) ? jobs[job] : undefined;
     if (!runJob) throw new NotFoundException('Tarefa não encontrada');
@@ -44,6 +45,23 @@ export class JobsController {
     const startedAt = Date.now();
     await runJob();
     return { job, ok: true, ms: Date.now() - startedAt };
+  }
+
+  /**
+   * Sinal de vida da integração para o backoffice Tagen (POST /api/heartbeat
+   * com a api_key do produto). Agendado pelo pg_cron do Supabase; sem as envs
+   * TAGEN_* configuradas o job é no-op. Falha de HTTP marca o run como erro.
+   */
+  private async tagenHeartbeat() {
+    const url = this.config.get<string | null>('backoffice.heartbeatUrl');
+    const apiKey = this.config.get<string | null>('backoffice.apiKey');
+    if (!url || !apiKey) return;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'x-tagen-api-key': apiKey },
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) throw new Error(`Heartbeat do backoffice falhou: HTTP ${res.status}`);
   }
 
   private matchesSecret(token: string, secret: string) {

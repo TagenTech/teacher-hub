@@ -20,7 +20,9 @@
     "migration:run": "pnpm typeorm migration:run",
     "migration:run:prod": "typeorm -d dist/data-source.js migration:run",
     "test:e2e": "jest --config ./test/jest-e2e.json --runInBand",
-    "create-teacher:prod": "node dist/scripts/create-teacher.js"
+    "create-teacher:prod": "node dist/scripts/create-teacher.js",
+    "backfill-tagen": "ts-node -r tsconfig-paths/register src/scripts/backfill-tagen.ts",
+    "backfill-tagen:prod": "node dist/scripts/backfill-tagen.js"
   },
   "jest": {
     "moduleFileExtensions": [

@@ -15,7 +15,7 @@ export interface AppConfig {
   vapid: { publicKey: string | null; privateKey: string | null; subject: string };
   signupEnabled: boolean;
   entitlements: { secret: string | null; productSlug: string };
-  backoffice: { provisionUrl: string | null; apiKey: string | null };
+  backoffice: { provisionUrl: string | null; heartbeatUrl: string | null; apiKey: string | null };
   oauth: Record<'google' | 'microsoft' | 'facebook', { clientId: string; clientSecret: string } | null>;
 }
 
@@ -72,6 +72,9 @@ export default (): AppConfig => {
       // Endpoint de provisionamento (produto → backoffice) chamado no cadastro.
       provisionUrl: process.env.TAGEN_BACKOFFICE_URL
         ? `${process.env.TAGEN_BACKOFFICE_URL.replace(/\/$/, '')}/api/provision`
+        : null,
+      heartbeatUrl: process.env.TAGEN_BACKOFFICE_URL
+        ? `${process.env.TAGEN_BACKOFFICE_URL.replace(/\/$/, '')}/api/heartbeat`
         : null,
       apiKey: process.env.TAGEN_BACKOFFICE_API_KEY || null,
     },

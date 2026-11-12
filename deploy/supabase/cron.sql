@@ -32,7 +32,8 @@ declare
     ['turmei-pauses',         '0 * * * *',  'pauses'],          -- fim de pausas: de hora em hora
     ['turmei-slots',          '0 6 * * *',  'slots'],           -- 03:00 BRT: gera aulas recorrentes
     ['turmei-billing',        '0 7 * * *',  'billing'],         -- 04:00 BRT: gera mensalidades
-    ['turmei-security-prune', '0 8 * * *',  'security-prune']   -- 05:00 BRT: limpa eventos de segurança
+    ['turmei-security-prune', '0 8 * * *',  'security-prune'],  -- 05:00 BRT: limpa eventos de segurança
+    ['turmei-tagen-heartbeat', '17 */6 * * *', 'tagen-heartbeat'] -- a cada 6h: sinal de vida p/ o backoffice
   ];
   j text[];
 begin

@@ -1,0 +1,66 @@
+name: Deploy
+
+# Deploy via CLI da Vercel (mesmo padrão de skedulei/joiei): o GitHub é a fonte
+# única das chaves — a cada deploy as TAGEN_*/CRON_SECRET são sincronizadas para
+# o projeto Vercel da API. Os projetos Vercel NÃO têm integração Git: sem este
+# workflow nada publica.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+      - 'apps/web/**'
+      - 'packages/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+jobs:
+  api:
+    name: API → Vercel (turmei-api)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install -g vercel
+      # GitHub é a fonte única das chaves de integração: a cada deploy elas são
+      # sincronizadas para o projeto Vercel da API (runtime lê process.env).
+      - name: Sync env vars to Vercel (api)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: team_i8ll2k73R8QdCG2TxN9FwAp8
+          VERCEL_PROJECT_ID: prj_thhYmHKMr1XBgxtSEIo8piH4Tg1s
+          TAGEN_BACKOFFICE_URL: ${{ secrets.TAGEN_BACKOFFICE_URL }}
+          TAGEN_BACKOFFICE_API_KEY: ${{ secrets.TAGEN_BACKOFFICE_API_KEY }}
+          TAGEN_ENTITLEMENTS_SECRET: ${{ secrets.TAGEN_ENTITLEMENTS_SECRET }}
+          TAGEN_PRODUCT_SLUG: ${{ secrets.TAGEN_PRODUCT_SLUG }}
+        run: |
+          set -e
+          sync_env() {
+            name="$1"; value="$2"
+            if [ -z "$value" ]; then echo "skip $name (vazio no GitHub)"; return; fi
+            vercel env rm "$name" production -y >/dev/null 2>&1 || true
+            printf '%s' "$value" | vercel env add "$name" production >/dev/null
+            echo "sync $name -> Vercel (production)"
+          }
+          sync_env TAGEN_BACKOFFICE_URL "$TAGEN_BACKOFFICE_URL"
+          sync_env TAGEN_BACKOFFICE_API_KEY "$TAGEN_BACKOFFICE_API_KEY"
+          sync_env TAGEN_ENTITLEMENTS_SECRET "$TAGEN_ENTITLEMENTS_SECRET"
+          sync_env TAGEN_PRODUCT_SLUG "$TAGEN_PRODUCT_SLUG"
+      - name: Deploy produção
+        run: vercel deploy --prod --yes --token="$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: team_i8ll2k73R8QdCG2TxN9FwAp8
+          VERCEL_PROJECT_ID: prj_thhYmHKMr1XBgxtSEIo8piH4Tg1s
+
+  web:
+    name: Web → Vercel (turmei-web)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install -g vercel
+      - name: Deploy produção
+        run: vercel deploy --prod --yes --token="$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: team_i8ll2k73R8QdCG2TxN9FwAp8
+          VERCEL_PROJECT_ID: prj_qHxiYJax1WKAPyokkRl9mQ6xJl7N

@@ -88,6 +88,8 @@ export class EntitlementsWebhookService {
     }
 
     const event = String(payload.event ?? '');
+    // Ping de teste do backoffice: valida rota + assinatura sem tocar no banco.
+    if (event === 'integration.ping') return { ok: true, ping: true };
     const allowed = new Set([
       'entitlement.created',
       'entitlement.activated',

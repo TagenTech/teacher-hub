@@ -222,6 +222,7 @@ export class AuthService {
         this.identities.create({ teacherId: teacher.id, provider: profile.provider, providerUserId: profile.providerUserId, email: profile.email }),
       );
       await this.events.record(created ? Ev.OAUTH_CREATED : Ev.OAUTH_LINKED, teacher.id, ctx, { provider: profile.provider });
+      if (created) this.provisionInBackoffice(teacher);
     }
     return { outcome: await this.afterPrimaryAuth(teacher, ctx, profile.provider), created };
   }
