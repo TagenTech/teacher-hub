@@ -1,0 +1,22 @@
+name: Cron Tagen
+
+# Agenda o heartbeat do backoffice no pg_cron do Supabase (job turmei-tagen-heartbeat).
+# Usa SUPABASE_MIGRATIONS_URL (mesmo segredo do workflow de migrations) e lê
+# turmei_api_url/turmei_cron_secret do Vault — ver deploy/supabase/tagen-heartbeat.sql.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Agenda heartbeat no pg_cron
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_MIGRATIONS_URL }}
+          PGSSLMODE: require
+        run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f deploy/supabase/tagen-heartbeat.sql
