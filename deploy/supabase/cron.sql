@@ -25,10 +25,41 @@ begin
 end $$;
 
 -- 2) Jobs. cron.schedule com o mesmo nome substitui o agendamento existente (pode rodar de novo).
+--    turmei-reminders: o SQL roda a cada minuto, mas só chama a API quando existe
+--    aula AGENDADA dentro da janela de lembrete de algum professor (WHERE EXISTS).
+--    Isso derruba ~43k chamadas/mês → poucas centenas, sem perder a precisão
+--    de minuto dos lembretes de aula (o maior consumidor de CPU da Vercel).
+do $$
+begin
+  perform cron.schedule('turmei-reminders', '* * * * *', $cmd$
+    select net.http_post(
+      url := (select decrypted_secret from vault.decrypted_secrets where name = 'turmei_api_url') || '/v1/internal/jobs/reminders',
+      headers := jsonb_build_object(
+        'Content-Type', 'application/json',
+        'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'turmei_cron_secret')
+      ),
+      body := '{}'::jsonb,
+      timeout_milliseconds := 30000
+    )
+    where exists (
+      select 1
+      from turmei_lessons l
+      join turmei_teachers t on t.id = l.teacher_id
+      where l.status = 'AGENDADA'
+        and t.lesson_reminder_minutes > 0
+        and l.starts_at > now()
+        and l.starts_at <= now() + (t.lesson_reminder_minutes || ' minutes')::interval
+    )
+  $cmd$);
+end $$;
+
+--    turmei-reminders-daily: a cada 15 min, incondicional. Cobre as notificações
+--    por janela de horário (resumo 7h, pagamentos, aniversários 8h) com ≤15min de
+--    atraso, e é rede de segurança para os lembretes de aula (idempotente).
 do $$
 declare
   jobs text[][] := array[
-    ['turmei-reminders',      '* * * * *',  'reminders'],       -- lembretes: a cada minuto
+    ['turmei-reminders-daily', '*/15 * * * *', 'reminders'],    -- resumo/pagamento/aniversário + fallback
     ['turmei-pauses',         '0 * * * *',  'pauses'],          -- fim de pausas: de hora em hora
     ['turmei-slots',          '0 6 * * *',  'slots'],           -- 03:00 BRT: gera aulas recorrentes
     ['turmei-billing',        '0 7 * * *',  'billing'],         -- 04:00 BRT: gera mensalidades
