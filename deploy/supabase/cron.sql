@@ -53,13 +53,14 @@ begin
   $cmd$);
 end $$;
 
---    turmei-reminders-daily: a cada 15 min, incondicional. Cobre as notificações
---    por janela de horário (resumo 7h, pagamentos, aniversários 8h) com ≤15min de
---    atraso, e é rede de segurança para os lembretes de aula (idempotente).
+--    turmei-reminders-daily: a cada 5 min, incondicional. Cobre as notificações
+--    por janela de horário (resumo 7h, pagamentos, aniversários 8h), é rede de
+--    segurança para os lembretes de aula (idempotente) e MANTÉM a function
+--    quente — chamadas quentes custam ~66ms de CPU contra ~2,5s de cold start.
 do $$
 declare
   jobs text[][] := array[
-    ['turmei-reminders-daily', '*/15 * * * *', 'reminders'],    -- resumo/pagamento/aniversário + fallback
+    ['turmei-reminders-daily', '*/5 * * * *', 'reminders'],     -- resumo/pagamento/aniversário + fallback + keep-warm
     ['turmei-pauses',         '0 * * * *',  'pauses'],          -- fim de pausas: de hora em hora
     ['turmei-slots',          '0 6 * * *',  'slots'],           -- 03:00 BRT: gera aulas recorrentes
     ['turmei-billing',        '0 7 * * *',  'billing'],         -- 04:00 BRT: gera mensalidades
